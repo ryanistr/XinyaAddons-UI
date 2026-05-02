@@ -1,0 +1,403 @@
+<resources>
+    <string name="app_name">Xia\'s Addons</string>
+    <string name="app_title_toolkit">Xinya Toolkit</string>
+
+    <string name="nav_home">Beranda</string>
+    <string name="nav_perf">Performa</string>
+    <string name="nav_sys">Sistem</string>
+    <string name="back">Kembali</string>
+    <string name="info">Info</string>
+    <string name="btn_got_it">Paham</string>
+    <string name="btn_cancel">Batal</string>
+    <string name="btn_save">Simpan</string>
+    <string name="btn_understand">Mengerti</string>
+    <string name="btn_ok">OK</string>
+
+    <string name="btn_reset">Reset</string>
+    <string name="btn_import">Impor</string>
+    <string name="btn_export">Ekspor</string>
+    <string name="btn_new_profile">Profil Baru</string>
+    <string name="btn_add_app">Tambah Aplikasi</string>
+    <string name="btn_delete_profile">Hapus Profil</string>
+    <string name="btn_update_now">Update Sekarang</string>
+
+    <string name="system_operational">Dashboard</string>
+    <string name="ac_power_source">Input AC</string>
+    <string name="battery_source">Baterai</string>
+    <string name="uptime_fmt">UP: %1$s</string>
+    <string name="deep_sleep_fmt">DS: %1$s</string>
+    <string name="cpu_flux">Beban CPU</string>
+    <string name="pwr_cell">Baterai</string>
+    <string name="therm_sens">Suhu</string>
+    <string name="quick_protocols">Profil Cepat</string>
+    <string name="protocol_gaming">AZenith</string>
+    <string name="protocol_efficiency">Undervolt</string>
+
+    <string name="power_matrix">Pusat Baterai</string>
+    <string name="power_strategy">Strategi Cas</string>
+    <string name="strategy_bypass_title">Bypass AC</string>
+    <string name="strategy_bypass_desc">Jeda cas, pakai daya dari AC.</string>
+    <string name="strategy_thermal_title">Batas Suhu</string>
+    <string name="strategy_thermal_desc">Stop cas kalau kepanasan.</string>
+    <string name="status_active">Aktif</string>
+    <string name="status_inactive">Nonaktif</string>
+    <string name="status_enabled">Nyala</string>
+    <string name="status_disabled">Mati</string>
+    <string name="charging_status">Ngecas</string>
+    <string name="discharging_status">Dipakai</string>
+    <string name="limit_stops_at">Stop cas di:</string>
+    <string name="limit_charge_limit">Batas Cas</string>
+    <string name="diag_temp">Suhu</string>
+    <string name="diag_health">Kesehatan</string>
+    <string name="diag_chem">Tipe</string>
+    <string name="batt_tech_default">Li-ion</string>
+
+    <string name="perf_matrix">Performa</string>
+    <string name="sys_authority">Kontrol Sistem</string>
+    <string name="sys_cpu">Manajer CPU</string>
+    <string name="gov_control">Kontrol Governor</string>
+    <string name="freq_scaling">Frekuensi &amp; Scaling</string>
+    <string name="gm_bst">Game Boost</string>
+    <string name="azenith">Mesin AZenith</string>
+    <string name="pwr_vlt">Voltase</string>
+    <string name="undervolt">Undervolt</string>
+    <string name="io_sched_label">I/O Scheduler</string>
+    <string name="storage_queue">Antrean Storage</string>
+    <string name="optimization">Optimasi</string>
+    
+    <string name="cpu_control_title">Kontrol CPU</string>
+    <string name="governor_selection">Pilihan Governor</string>
+    <string name="advanced_undervolt">Undervolt Lanjutan</string>
+    <string name="cpu_eem_offsets">Offset CPU</string>
+    <string name="little_core">Core Kecil</string>
+    <string name="unit_mv">" mV"</string>
+    <string name="active_scheduler">Scheduler Aktif</string>
+    <string name="azenith_boost">AZenith Boost</string>
+    <string name="active_profiles">Profil Aktif</string>
+    <string name="cpu_mode_simple">Simpel</string>
+    <string name="cpu_mode_advanced">Lanjutan</string>
+    <string name="cpu_section_profiles">Profil Cepat</string>
+    <string name="cpu_section_global">Scaling Global</string>
+    <string name="cpu_preset_perf">Performa</string>
+    <string name="cpu_preset_balance">Seimbang</string>
+    <string name="cpu_preset_power">Baterai</string>
+    <string name="cpu_gov_title">Governor</string>
+    <string name="btn_change">Ubah</string>
+    <string name="cpu_freq_cap">Batas Frekuensi</string>
+    <string name="cpu_ultra_saver">Hemat Baterai Ultra</string>
+    <string name="cpu_ultra_saver_desc">Kunci frekuensi di 50% dan paksa pakai governor powersave.</string>
+    <string name="cpu_advanced_warning">Mode Lanjutan aktif. Salah setting bisa bikin sistem nggak stabil.</string>
+    <string name="cpu_label_max">Maks</string>
+    <string name="cpu_label_min">Min</string>
+    <string name="cpu_footer_simple">Sistem ngatur detail frekuensi secara otomatis.</string>
+    <string name="cpu_footer_advanced">Override Kontroler AIO Aktif.</string>
+    <string name="cpu_change_all_govs">Ubah Semua Gov</string>
+    <string name="cpu_cluster_cores_fmt">Core: %1$s</string>
+    <string name="cpu_freq_mhz_fmt">%1$d MHz</string>
+    <string name="cpu_manual_override_active">Override Manual Aktif.</string>
+    <string name="cpu_info_desc">Atur frekuensi CPU dan governor biar performa dan baterai seimbang.</string>
+    <string name="cpu_info_simple_title">Mode Simpel:</string>
+    <string name="cpu_info_simple_desc">Pakai setting global yang pas buat pemakaian sehari-hari.</string>
+    <string name="cpu_info_advanced_title">Mode Lanjutan:</string>
+    <string name="cpu_info_advanced_desc">Kontrol lebih detail buat tiap cluster CPU. Khusus buat yang paham aja.</string>
+    <string name="cpu_cores_detected_fmt">%1$d Core Terdeteksi</string>
+
+    <string name="io_scheduler_title">I/O Scheduler</string>
+    <string name="io_warning_msg">Ganti I/O Scheduler bisa ngaruh ke kestabilan sistem atau data. Kalau mulai ngelag atau freeze, balikin ke Default.</string>
+    <string name="io_guide_title">Panduan I/O Scheduler</string>
+    <string name="io_guide_desc">I/O Scheduler nentuin urutan proses baca/tulis di storage. Kalau milih yang pas, hp bisa lebih responsif dan irit baterai.</string>
+    <string name="io_common_types">Tipe Umum:</string>
+    <string name="io_type_noop">Noop / None</string>
+    <string name="io_desc_noop">Konsep dasar FIFO. Cocok buat Flash Storage modern (UFS/NVMe) karena hardware yang bakal ngurutin.</string>
+    <string name="io_type_mq">MQ-Deadline</string>
+    <string name="io_desc_mq">Prioritasin proses baca biar nggak lag. Bagus buat pemakaian harian.</string>
+    <string name="io_type_bfq">BFQ</string>
+    <string name="io_desc_bfq">Scheduler kompleks buat HDD/storage lambat. Bebannya lumayan berat tapi pembagiannya adil.</string>
+    <string name="io_guide_footer">Saran: Kalau ragu, pilih \'none\' atau \'mq-deadline\' (Default).</string>
+    <string name="io_sched_recommendation">Disarankan: \'none\' atau \'mq-deadline\' buat storage modern.</string>
+    <string name="io_global_status">Status Global</string>
+    <string name="io_block_map">BLOCK MAP TERDETEKSI</string>
+    <string name="io_no_devices">Nggak ada storage fisik yang ketemu.\n(Virtual device disembunyikan)</string>
+    <string name="status_mixed">CAMPURAN</string>
+    <string name="status_synced">SINKRON</string>
+    <string name="status_active_caps">AKTIF</string>
+
+    <string name="system_core">Pengaturan Sistem</string>
+    <string name="hardware_matrix">Software</string>
+    <string name="id_matrix_label">Lainnya</string>
+    <string name="identity_spoofing">Spoofing &amp; Integritas</string>
+    <string name="identity_desc">PlayIntegrity · GPhotos · FPS Unlocker · dll</string>
+    <string name="vis_fx">Backlight</string>
+    <string name="halo_light">Lampu Halo</string>
+    <string name="disp_cfg">Layar</string>
+    <string name="resolution">Resolusi</string>
+    <string name="hw_therm">Suhu</string>
+    <string name="thermal">Thermal</string>
+    <string name="pwr_src">Daya</string>
+    <string name="battery">Baterai</string>
+    
+    <string name="feature_coming_soon">Segera Hadir</string>
+    <string name="feature_under_dev">Fitur ini masih\ndalam tahap pengembangan.</string>
+
+    <string name="sys_tuner_title">SystemUI Tuner</string>
+    <string name="sys_flag_secure_title">Matikan Flag Secure</string>
+    <string name="sys_flag_secure_desc">Biar bisa screenshot dan rekam layar di aplikasi atau jendela yang dikunci.</string>
+    
+    <string name="sys_rotation_title">Sembunyikan Tombol Rotasi</string>
+    <string name="sys_rotation_desc">Nyembunyiin tombol rotasi yang biasa muncul di navbar waktu hp dimiringin.</string>
+
+    <string name="spoof_dashboard">Spoofing Identitas</string>
+    <string name="pif_section_title">Play Integrity Fix</string>
+    <string name="pif_enable_title">Aktifkan PIF</string>
+    <string name="pif_enable_desc">Inject perbaikan prop dan keybox, biar lolos Play Integrity.</string>
+    <string name="pif_auto_update">Auto-Update</string>
+    <string name="pif_auto_update_title">Update Otomatis</string>
+    <string name="pif_active_fmt">Aktif: %1$s</string>
+    <string name="pif_mode_reboot">Saat Reboot</string>
+    <string name="pif_mode_periodic">Berkala</string>
+    <string name="pif_cloud_mode">Mode Cloud</string>
+    <string name="pif_custom_mode">Mode Custom</string>
+    <string name="pif_updating">Memperbarui...</string>
+    <string name="pif_update_now">Update PIF Sekarang</string>
+    <string name="pif_keybox_loaded">Keybox Terpasang</string>
+    <string name="pif_no_keybox">Keybox Belum Terpasang</string>
+    <string name="pif_keybox_ready">Siap di-inject</string>
+    <string name="pif_keybox_import_required">Butuh impor</string>
+    <string name="pif_import_keybox">Impor Keybox</string>
+    
+    <string name="spoof_general_title">Spoofing Umum</string>
+    <string name="spoof_photos_title">Google Photos Unlimited</string>
+    <string name="spoof_photos_desc">Ubah info hp jadi Pixel biar bisa backup kualitas original sepuasnya.</string>
+    <string name="spoof_netflix_title">Unlock Netflix HDR</string>
+    <string name="spoof_netflix_desc">Ubah info model biar dapet Widevine L1/HDR.</string>
+    
+    <string name="spoof_game_title">Spoof Prop Game</string>
+    <string name="spoof_game_desc">Spoof hp per-aplikasi buat unlock fitur dan grafik game.</string>
+    <string name="spoof_identity_header">IDENTITAS DEVICE (SYSTEM PROPS)</string>
+    <string name="spoof_target_header">APLIKASI TARGET</string>
+    <string name="spoof_no_apps">Nggak ada aplikasi yang dipilih. Profil ini nonaktif.</string>
+    <string name="spoof_profile_stats_fmt">%1$s %2$s • %3$d Aplikasi (%4$d aktif)</string>
+    
+    <string name="prop_brand">BRAND</string>
+    <string name="prop_manufacturer">MANUFACTURER</string>
+    <string name="prop_model">MODEL</string>
+    <string name="prop_device">DEVICE</string>
+
+    <string name="dialog_import_failed_title">Gagal Impor</string>
+    <string name="dialog_import_failed_msg">Gagal baca data, file yang kamu impor udah bener belum?</string>
+    <string name="dialog_new_profile_title">Profil Device Baru</string>
+    <string name="dialog_new_profile_hint">ID Profil (contoh: GT20Pro)</string>
+    <string name="dialog_select_app">Pilih Aplikasi</string>
+    <string name="dialog_search">Cari</string>
+    <string name="dialog_reset_profiles_title">Reset Profil?</string>
+    <string name="dialog_reset_profiles_desc">Ini bakal nimpa profil game custom kamu pakai template bawaan. Nggak bisa di-undo ya.</string>
+    <string name="dialog_loading_apps_title">Memuat Aplikasi</string>
+    <string name="dialog_loading_apps_desc">Tunggu bentar, lagi scan aplikasi yang terinstal...</string>
+
+    <string name="desc_add_profile">Tambah Profil</string>
+
+    <string name="thermal_engine">Mesin Thermal</string>
+    <string name="throttle_threshold">Batas Throttling</string>
+    <string name="temp_current_fmt">Saat ini: %1$d°C</string>
+    <string name="profile_os">OS</string>
+    <string name="profile_ai">AI</string>
+    <string name="profile_off">MATI</string>
+    <string name="profile_man">MAN</string>
+    
+    <string name="mode_default">Default</string>
+    <string name="mode_adaptive">Adaptif</string>
+    <string name="mode_disabled">Nonaktif</string>
+    <string name="mode_custom">Custom</string>
+    
+    <string name="desc_default">Optimasi Sistem</string>
+    <string name="desc_adaptive">Belajar dari Pemakaian</string>
+    <string name="desc_disabled">Keamanan Mati</string>
+    <string name="desc_custom">Batas Manual</string>
+
+    <string name="dialog_high_temp_title">Risiko Suhu Tinggi</string>
+    <string name="dialog_high_temp_msg">Setting batas throttle di atas 50°C bisa bikin hp panas banget kalau dipegang dan bikin baterai cepet bocor.\n\nYakin mau lanjut?</string>
+    <string name="btn_allow_high_temp">Izinkan >50°C</string>
+    <string name="btn_disable">Matikan</string>
+
+    <string name="dialog_info_title">Profil Thermal</string>
+    <string name="info_os_title">Bawaan OS</string>
+    <string name="info_os_desc">Pakai setting thermal asli bawaan pabrik.</string>
+    <string name="info_ai_title">AI Adaptif</string>
+    <string name="info_ai_desc">Otomatis ngatur batas throttle sesuai kebiasaan pakaimu.</string>
+    <string name="info_disabled_title">Nonaktif</string>
+    <string name="info_disabled_desc">Matiin semua thermal throttling. BAHAYA.</string>
+    <string name="info_custom_title">Custom</string>
+    <string name="info_custom_desc">Atur batas suhu secara manual.</string>
+
+    <string name="dialog_warning_title">Matikan Keamanan?</string>
+    <string name="dialog_warning_msg">Matiin thermal throttling bisa bikin hp overheat, sistem nggak stabil, sampai kerusakan hardware.</string>
+
+    <string name="doze_title">Paksa Doze</string>
+    <string name="doze_status_running">Berjalan</string>
+    <string name="doze_status_stopped">Berhenti</string>
+    <string name="doze_desc">Paksa masuk mode doze pas layar mati biar irit baterai.</string>
+    <string name="doze_config_title">Konfigurasi</string>
+    <string name="doze_delay">Jeda Masuk</string>
+    <string name="doze_disable_sensors">Matikan Sensor</string>
+    <string name="doze_disable_wifi">Matikan WiFi</string>
+    <string name="doze_disable_data">Matikan Data Seluler</string>
+
+    <string name="dialog_guide_title">Panduan Manajemen Daya</string>
+    <string name="guide_reactor_title">Kontrol Auto Cut</string>
+    <string name="guide_reactor_desc">Geser cincin buat ngatur batas cas.</string>
+    <string name="guide_autocut_title">Auto Cut</string>
+    <string name="guide_autocut_desc">Stop ngecas di batas yang ditentukan biar baterai lebih awet.</string>
+    <string name="guide_bypass_title">Bypass AC</string>
+    <string name="guide_bypass_desc">Langsung pakai daya dari charger pas batas cas tercapai, biar hp nggak cepet panas.</string>
+    <string name="guide_thermal_title">Batas Suhu</string>
+    <string name="guide_thermal_desc">Fitur aman yang otomatis nyetop cas kalau suhu hp lewatin batas.</string>
+    <string name="guide_doze_title">Paksa Doze</string>
+    <string name="guide_doze_desc">Paksa masuk mode doze pas layar mati biar irit baterai.</string>
+
+    <string name="toast_config_applied">Konfigurasi Diterapkan</string>
+    <string name="uv_advanced_mode">Mode Lanjutan</string>
+    <string name="status_unlocked">Terbuka</string>
+    <string name="status_safe_mode">Safe Mode</string>
+    <string name="uv_advanced_desc">Buka batasan voltase (&lt; -25mV) dan bisa input manual.</string>
+    <string name="btn_load_recommended">Muat Nilai Rekomendasi</string>
+    <string name="uv_gpu_settings_title">PENGATURAN GPU</string>
+    <string name="uv_gpu_warning">Undervolt GPU sering bikin grafik error, driver crash, dan sistem freeze. Hati-hati ya.</string>
+    
+    <string name="dialog_uv_advanced_title">Aktifkan Mode Lanjutan?</string>
+    <string name="dialog_uv_advanced_msg">Kamu mau buka batas aman voltase.\n\nKalau salah masukin nilai, bisa bikin bootloop, data hilang, atau hardware rusak.\n\nDeveloper NGGAK bertanggung jawab atas kerusakan yang terjadi karena pakai fitur ini.</string>
+    <string name="btn_accept_risk">Saya Terima Risikonya</string>
+    
+    <string name="dialog_uv_stage1_title">Peringatan Kestabilan</string>
+    <string name="dialog_uv_stage1_msg">Offset di bawah -50 mV punya risiko besar bikin hp restart sendiri dan freeze.</string>
+    
+    <string name="dialog_uv_stage2_title">RISIKO KERUSAKAN HARDWARE</string>
+    <string name="dialog_uv_stage2_msg">Kamu masukin angka yang ekstrim.\n\nIni bisa bikin kerusakan hardware permanen, file korup, atau bootloop.\n\nDEVELOPER NGGAK BERTANGGUNG JAWAB atas kerusakan devicemu.</string>
+    <string name="btn_accept_responsibility">Saya Siap Tanggung Jawab</string>
+    
+    <string name="dialog_uv_info_title">Tentang Undervolting</string>
+    <string name="dialog_uv_info_1">Undervolting itu ngurangin daya yang masuk ke CPU/GPU, bikin hp lebih adem dan irit baterai.</string>
+    <string name="dialog_uv_info_2">Offset diaplikasikan berdasarkan tabel voltase pabrik. Kalau minusnya terlalu gede, hp bisa nggak stabil.</string>
+    <string name="dialog_uv_info_3">Rekomendasi: -11mV buat cluster CPU.</string>
+    
+    <string name="uv_label_big">Core Besar (B)</string>
+    <string name="uv_label_bl">Besar–Kecil (BL)</string>
+    <string name="uv_label_little">Core Kecil (L)</string>
+    <string name="uv_label_cci">CCI</string>
+    <string name="uv_label_gpu">Undervolt GPU</string>
+    <string name="uv_label_gpu_high">Undervolt GPU Tinggi</string>
+    
+    <string name="uv_risk_safe">Beroperasi di batas aman.</string>
+    <string name="uv_risk_light">Perbedaan silikon bisa ngaruh ke kestabilan.</string>
+    <string name="uv_risk_strong">Risiko tinggi hp restart atau freeze.</string>
+    <string name="uv_risk_extreme">BAHAYA. Rawan bootloop.</string>
+    <string name="uv_eem_offset">OFFSET EEM</string>
+    <string name="uv_input_hint">Offset (mV)</string>
+    <string name="uv_notes_title">CATATAN TEKNIS</string>
+    <string name="uv_notes_text">• Domain EEM punya kestabilan beda-beda di tiap hp.\n• Beban tiba-tiba bisa bikin freeze walaupun offsetnya kecil.\n• Batas amannya nggak selalu sama.</string>
+    <string name="uv_not_supported_title">Fitur Nggak Tersedia</string>
+    <string name="uv_not_supported_desc">Maaf, devicemu nggak support kontrol Undervolt.</string>
+    <string name="btn_go_back">Kembali</string>
+
+    <string name="az_protocols_title">PROTOKOL PERFORMA</string>
+    <string name="az_freq_title">Batasi Freq Maksimal</string>
+    <string name="az_freq_desc">Tahan frekuensi CPU pas main game biar nggak gampang panas.</string>
+    <string name="az_dnd_title">DND Gaming</string>
+    <string name="az_dnd_desc">Blokir notif dan telepon pas game lagi jalan.</string>
+    <string name="az_mem_title">Bersih-bersih Memori Ekstra</string>
+    <string name="az_mem_desc">Lebih sering ngebersihin cache di background.</string>
+    
+    <string name="az_apps_title_fmt">APLIKASI TERINSTAL (%1$d)</string>
+    
+    <string name="az_info_injection_title">Injeksi Sistem</string>
+    <string name="az_info_injection_desc">Masukin flag performa langsung ke sistem render aplikasi.</string>
+    <string name="az_info_boost_title">Game Boost</string>
+    <string name="az_info_boost_desc">Prioritasin resource buat aplikasi yang lagi dibuka biar nggak patah-patah.</string>
+    <string name="az_info_mem_title">Kunci Memori</string>
+    <string name="az_info_mem_desc">Cegah aplikasi pilihan biar nggak ditutup paksa sama Low Memory Killer (LMK).</string>
+    
+    <string name="az_master_switch">Saklar Utama</string>
+    <string name="az_engine_active">Mesin Aktif</string>
+    <string name="az_engine_offline">Mesin Offline</string>
+    <string name="az_tag_recommended">Rekomendasi</string>
+    <string name="menu_settings">Pengaturan</string>
+    <string name="menu_about">Tentang</string>
+
+    <string name="about_title">Tentang</string>
+    <string name="about_app_desc">Xia\'s Addons itu toolkit super buat maksimalin performa hapemu. Fitur ini jembatan antara modding sistem yang ribet jadi lebih gampang, buat ngatur hardware secara detail.</string>
+    
+    <string name="about_features_header">FITUR UTAMA</string>
+    <string name="about_feat_perf">Profiling Performa</string>
+    <string name="about_feat_perf_desc">Atur frekuensi CPU/GPU dan manajemen governor tingkat lanjut.</string>
+    <string name="about_feat_identity">Spoofing Identitas</string>
+    <string name="about_feat_identity_desc">Lewatin cek Play Integrity dan unlock fitur khusus di aplikasi.</string>
+    <string name="about_feat_power">Manajemen Daya</string>
+    <string name="about_feat_power_desc">Bypass charging dan kontrol suhu bawaan.</string>
+
+    <string name="about_safety_header">KEAMANAN &amp; DEFAULTS</string>
+    <string name="about_safety_title">Kenapa Settingan Default Penting</string>
+    <string name="about_safety_desc">Settingan default udah diukur biar stabil dan aman. Modul advanced kayak Undervolting dan override Thermal emang mantap, tapi berisiko. Mending stay di profil "Seimbang" kalau kamu kurang paham risikonya.</string>
+
+    <string name="about_credits_header">PENGEMBANGAN</string>
+    <string name="about_dev_role">Kreator &amp; Lead Developer</string>
+    <string name="about_dev_name">@rianixia</string>
+    <string name="about_github_title">Source Code</string>
+    <string name="about_github_handle">GitHub: ryanistr</string>
+    
+    <string name="about_update_header">UPDATE</string>
+    <string name="about_check_updates">Cek Update</string>
+    <string name="about_version_fmt">Versi %1$s</string>
+    <string name="about_up_to_date">Versimu udah yang paling baru.</string>
+
+    <string name="settings_title">Pengaturan Aplikasi</string>
+    <string name="io_scheduler_changed_success">IO Scheduler berhasil diganti ke %1$s</string>
+
+    <string name="pref_category_general">Umum</string>
+    <string name="pref_launcher_icon_title">Tampilkan di Homescreen</string>
+    <string name="pref_launcher_icon_desc">Aktifin biar icon aplikasi muncul di launcher.</string>
+    <string name="banner_support_title">Dukung Pengembangan</string>
+    <string name="banner_support_desc">Suka pakai Xinya Toolkit? Dukunganmu bantu cepetin update dan bikin fitur baru terwujud.</string>
+    <string name="btn_donate">Donasi Sekarang</string>
+
+    <string name="bypass_resume_title">Batas Lanjut Cas</string>
+    <string name="bypass_resume_desc">Lanjut ngecas pas di %1$s%%</string>
+
+    <string name="title_batt_health">Kesehatan Baterai</string>
+    <string name="title_batt_cycles">Siklus Cas</string>
+    <string name="diag_cycles">Siklus</string>
+    
+    <string name="dialog_report_title_fmt">Tentang %1$s</string>
+    <string name="dialog_report_desc_1">Nilai ini dibaca langsung dari path kernel sistem:</string>
+    <string name="dialog_report_desc_2">Kalau kamu ngerasa nilai ini salah (angkanya ngaco atau nggak masuk akal), kamu bisa lapor ke developer.</string>
+    <string name="dialog_report_desc_3">Penting: Pas ngelapor, sebutin Model Device, Versi ROM, dan alasan kenapa path-nya menurutmu salah.</string>
+    <string name="btn_report_issue">Lapor Masalah</string>
+    <string name="setup_welcome_title">Selamat Datang di Xinya</string>
+    <string name="setup_welcome_desc">Toolkit andalan buat modifikasi sistem dan tuning performa</string>
+    <string name="setup_dashboard_title">Dashboard &amp; Performa</string>
+    <string name="setup_dashboard_desc">Pantau statistik sistem real-time dan atur profil CPU, GPU, sama Thermal buat nyeimbangin performa dan daya</string>
+    <string name="setup_system_title">Sistem &amp; IO</string>
+    <string name="setup_system_desc">Masuk lebih dalem ke settingan sistem, IO Scheduler, sama modifikasi secure settings</string>
+    <string name="setup_preferences_title">Pengaturan</string>
+    <string name="setup_preferences_desc">Atur gimana Xinya berjalan di hapemu</string>
+    
+    <string name="setup_hero_title">Xinya Toolkit</string>
+    <string name="setup_pill_performance">Performa</string>
+    <string name="setup_pill_control">Kontrol</string>
+    <string name="cd_welcome_image">Gambar Selamat Datang</string>
+    
+    <string name="setup_pref_launcher_title">Tampilkan di App Drawer</string>
+    <string name="setup_pref_launcher_desc">Bikin Xinya Toolkit kelihatan di launcher</string>
+    <string name="setup_pref_safety_title">Mode Aman</string>
+    <string name="setup_pref_safety_desc">Otomatis reset tweak pas reboot biar stabil</string>
+    
+    <string name="setup_dialog_safety_title">Matikan Mode Aman?</string>
+    <string name="setup_dialog_safety_risk_info">Matiin Mode Aman bakal nahan settingan krusial (IO Scheduler, Frekuensi CPU, Offset Undervolt) biar tetep nempel walau hp di-reboot.</string>
+    <string name="setup_dialog_safety_warning">PERINGATAN: Konfigurasi yang salah bisa bikin bootloop dan nggak bisa diperbaiki. Risiko tanggung sendiri.</string>
+    <string name="setup_dialog_safety_confirm">Tetap Matikan</string>
+    <string name="setup_dialog_safety_cancel">Batal</string>
+    
+    <string name="setup_btn_get_started">Mulai</string>
+    <string name="setup_btn_next">Lanjut</string>
+
+    <string name="az_notif_active_title">Profil Performa Aktif</string>
+    <string name="az_notif_active_desc">Mengoptimalkan %1$s</string>
+</resources>

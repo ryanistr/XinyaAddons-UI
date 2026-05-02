@@ -1,0 +1,140 @@
+{
+  "BS4": {
+    "BRAND": "blackshark",
+    "MANUFACTURER": "blackshark",
+    "MODEL": "SHARK PRS-A0",
+    "PKGNAMES": [
+      "com.proximabeta.mf.uamo"
+    ]
+  },
+  "R14": {
+    "BRAND": "realme",
+    "MANUFACTURER": "realme",
+    "MODEL": "RMX5070",
+    "PKGNAMES": [
+      "com.dts.freefiremax",
+	  "com.dts.freefireth",
+	  "com.levelinfinite.sgameGlobal",
+	  "com.mobile.legends",
+      "com.vng.mlbbvn"
+    ]
+  },
+  "iQ11": {
+    "BRAND": "vivo",
+    "MANUFACTURER": "vivo",
+    "MODEL": "V2243A",
+    "PKGNAMES": [
+      "com.tencent.KiHan",
+      "com.tencent.tmgp.cf",
+      "com.tencent.tmgp.cod",
+      "com.tencent.tmgp.gnyx"
+    ]
+  },
+  "K80": {
+    "BRAND": "Xiaomi",
+    "MANUFACTURER": "Xiaomi",
+    "MODEL": "24122RKC7C",
+    "PKGNAMES": [
+      "com.delta.force.hawk.ops",
+      "com.garena.game.df",
+      "com.levelinfinite.hotta.gp",
+      "com.supercell.clashofclans"
+    ]
+  },
+  "MI13P": {
+    "BRAND": "Xiaomi",
+    "MANUFACTURER": "Xiaomi",
+    "MODEL": "2210132C",
+    "PKGNAMES": [
+      "com.tencent.tmgp.sgame"
+    ]
+  },
+  "NX729J": {
+    "BRAND": "nubia",
+    "DEVICE": "NX729J",
+    "MANUFACTURER": "nubia",
+    "MODEL": "NX729J",
+    "PKGNAMES": [
+      "com.YoStar.AetherGazer"
+    ]
+  },
+  "OP8P": {
+    "BRAND": "OnePlus",
+    "DEVICE": "OnePlus8Pro",
+    "MANUFACTURER": "OnePlus",
+    "MODEL": "IN2020",
+    "PKGNAMES": [
+      "com.netease.lztgglobal",
+      "com.riotgames.league.wildrift",
+      "com.riotgames.league.wildrifttw",
+      "com.riotgames.league.wildriftvn"
+    ]
+  },
+  "OP9P": {
+    "BRAND": "OnePlus",
+    "DEVICE": "OnePlus9Pro",
+    "MANUFACTURER": "OnePlus",
+    "MODEL": "LE2101",
+    "PKGNAMES": [
+      "com.epicgames.fortnite",
+      "com.epicgames.portal",
+      "com.tencent.lolm",
+      "jp.konami.pesam"
+    ]
+  },
+  "ROG1": {
+    "BRAND": "asus",
+    "MANUFACTURER": "asus",
+    "MODEL": "ASUS_Z01QD",
+    "PKGNAMES": [
+      "com.cygames.umaumusume"
+    ]
+  },
+  "ROG3": {
+    "BRAND": "asus",
+    "MANUFACTURER": "asus",
+    "MODEL": "ASUS_I003D",
+    "PKGNAMES": [
+      "com.ea.gp.fifamobile",
+      "com.pearlabyss.blackdesertm.gl",
+      "com.pearlabyss.blackdesertm"
+    ]
+  },
+  "ROG6": {
+    "BRAND": "asus",
+    "MANUFACTURER": "asus",
+    "MODEL": "ASUS_AI2201",
+    "PKGNAMES": [
+      "com.activision.callofduty.shooter",
+      "com.gameloft.android.ANMP.GloftA9HM",
+      "com.madfingergames.legends",
+      "com.riotgames.league.teamfighttactics",
+      "com.riotgames.league.teamfighttacticstw",
+      "com.riotgames.league.teamfighttacticsvn"
+    ]
+  },
+  "GT20P": {
+    "BRAND": "Infinix",
+    "MANUFACTURER": "INFINIX",
+    "MODEL": "Infinix X6871",
+    "PKGNAMES": [
+      "com.pubg.imobile",
+      "com.pubg.krmobile",
+      "com.rekoo.pubgm",
+      "com.tencent.tmgp.pubgmhd",
+      "com.vng.pubgmobile",
+      "com.tencent.ig"
+    ]
+  },
+  "iQ13": {
+    "BRAND": "vivo",
+    "MANUFACTURER": "vivo",
+    "MODEL": "V2408A",
+    "PKGNAMES": [
+      "com.garena.game.codm",
+      "com.tencent.tmgp.kr.codm",
+      "com.vng.codmvn",
+	  "com.miraclegames.farlight84"
+    ]
+  }
+}

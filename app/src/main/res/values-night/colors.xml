@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="xinya_primary">#FFB0CC</color>
+    <color name="xinya_on_primary">#541D35</color>
+    <color name="xinya_background">#050505</color> <color name="xinya_surface">#12141B</color>     <color name="xinya_surface_highlight">#2C2C33</color>
+    <color name="xinya_text">#E4E4E4</color>
+    <color name="xinya_text_variant">#A0A0A0</color>
+
+    <color name="banner_gradient_start">#FF050505</color>
+    <color name="banner_gradient_center">#80050505</color>
+    <color name="banner_gradient_end">#00050505</color>
+
+    <color name="purple_500">@color/xinya_primary</color>
+    <color name="purple_700">@color/xinya_on_primary</color>
+    <color name="teal_200">#E2BDC8</color>
+    <color name="white">#FFFFFF</color>
+    <color name="black">#000000</color>
+</resources>

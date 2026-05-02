@@ -1,0 +1,16 @@
+<resources>
+    <style name="Theme.RianixiaSettingsOverlay" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="colorPrimary">@color/xinya_primary</item>
+        <item name="colorOnPrimary">@color/xinya_on_primary</item>
+        <item name="android:colorBackground">@color/xinya_background</item>
+        <item name="colorSurface">@color/xinya_surface</item>
+        <item name="colorOnSurface">@color/xinya_text</item>
+        <item name="colorOnSurfaceVariant">@color/xinya_text_variant</item>
+        
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:windowLightStatusBar">false</item>
+        <item name="android:navigationBarColor">@color/xinya_background</item>
+    </style>
+    
+    <style name="Theme.Rianixia" parent="Theme.RianixiaSettingsOverlay" />
+</resources>

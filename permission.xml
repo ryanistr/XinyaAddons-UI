@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<privapp-permissions package="com.rianixia.settings.overlay">
+    <permission name="android.permission.QUERY_ALL_PACKAGES"/>
+    <permission name="android.permission.FOREGROUND_SERVICE"/>
+    <permission name="android.permission.FOREGROUND_SERVICE_SPECIAL_USE"/>
+    <permission name="android.permission.WAKE_LOCK"/>
+    <permission name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+    <permission name="android.permission.DUMP"/>
+    <permission name="android.permission.WRITE_SECURE_SETTINGS"/>
+    <permission name="android.permission.POST_NOTIFICATIONS"/>
+    <permission name="android.permission.MODIFY_PHONE_STATE"/>
+    <permission name="android.permission.DEVICE_POWER"/>
+    <permission name="android.permission.INTERNAL_SYSTEM_WINDOW"/>
+</privapp-permissions>

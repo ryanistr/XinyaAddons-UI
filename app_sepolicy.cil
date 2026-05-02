@@ -1,0 +1,33 @@
+add seapp context
+user=_app seinfo=default name=com.rianixia.settings.overlay domain=rianixia_app type=rianixia_app_data_file levelFrom=user
+
+;;; 1. Define the App Domain (rianixia_app)
+(type rianixia_app)
+(roletype object_r rianixia_app)
+
+;; Inherit from priv_app to support /system/priv-app permissions
+(typeattributeset domain (rianixia_app))
+(typeattributeset coredomain (rianixia_app))
+(typeattributeset appdomain (rianixia_app))
+(typeattributeset priv_app (rianixia_app)) 
+
+;;; 2. Define the App Data File Type (rianixia_app_data_file)
+(type rianixia_app_data_file)
+(roletype object_r rianixia_app_data_file)
+
+;; Inherit standard file attributes
+(typeattributeset file_type (rianixia_app_data_file))
+(typeattributeset data_file_type (rianixia_app_data_file))
+(typeattributeset core_data_file_type (rianixia_app_data_file))
+(typeattributeset file_type (rianixia_app_data_file))
+
+;;; 3. Allow rianixia_aio to Access this new data type
+;; Directory Access
+(allow rianixia_aio rianixia_app_data_file (dir (read write create getattr setattr lock rename add_name remove_name reparent search rmdir open)))
+
+;; File Access
+(allow rianixia_aio rianixia_app_data_file (file (read write create getattr setattr lock append map unlink rename open)))
+
+;;; 4. Allow the App itself to access its own data
+(allow rianixia_app rianixia_app_data_file (dir (create_dir_perms)))
+(allow rianixia_app rianixia_app_data_file (file (create_file_perms)))
