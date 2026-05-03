@@ -162,7 +162,7 @@ fun HomeScreen(
                                         modifier = Modifier.weight(1f),
                                         color = MaterialTheme.colorScheme.secondary,
                                         isActive = state.isUndervoltActive,
-                                        activeStatusText = if (state.totalUndervoltValue < 0) "${state.totalUndervoltValue * 6}mV" else "ON",
+                                        activeStatusText = if (state.totalUndervoltValue < 0) "${kotlin.math.abs(state.totalUndervoltValue)} Steps" else "ON",
                                         onClick = { navController.navigate("undervolt") } 
                                     )
                                 }

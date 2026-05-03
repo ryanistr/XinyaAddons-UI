@@ -7,7 +7,7 @@ import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-// [FIXED] Updated import to AutoMirrored
+import androidx.compose.ui.unit.sp
 import androidx.compose.material.icons.automirrored.rounded.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -30,35 +30,67 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.*
 import dev.chrisbanes.haze.HazeState
 import dev.chrisbanes.haze.HazeStyle
 import dev.chrisbanes.haze.HazeTint
 import dev.chrisbanes.haze.hazeEffect
 import kotlinx.coroutines.launch
+import androidx.compose.ui.draw.drawBehind
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.compositionLocalOf
+import androidx.compose.runtime.mutableIntStateOf
+
+val LocalCardActiveToggleCount = compositionLocalOf { mutableIntStateOf(0) }
 
 fun Modifier.frostedGlass(
     backgroundColor: Color,
     borderColor: Color,
     shape: RoundedCornerShape,
-    hazeState: HazeState? = null
+    hazeState: HazeState? = null,
+    accentColor: Color = Color.Transparent // NEW
 ): Modifier = this
     .clip(shape)
     .then(
-        if (hazeState != null) {
-            Modifier.hazeEffect(
-                state = hazeState,
-                style = HazeStyle(
-                    backgroundColor = backgroundColor,
-                    blurRadius = 24.dp,
-                    tint = HazeTint(backgroundColor),
-                    noiseFactor = 0.05f
-                )
+        if (hazeState != null) Modifier.hazeEffect(
+            state = hazeState,
+            style = HazeStyle(
+                backgroundColor = backgroundColor,
+                blurRadius = 24.dp,
+                tint = HazeTint(backgroundColor),
+                noiseFactor = 0.05f
             )
-        } else {
-            Modifier.background(backgroundColor)
-        }
+        ) else Modifier.background(backgroundColor)
     )
+    .drawWithCache {
+        val shimmerBrush = Brush.horizontalGradient(
+            colors = listOf(
+                Color.Transparent,
+                Color.White.copy(alpha = 0.22f),
+                if (accentColor != Color.Transparent) accentColor.copy(alpha = 0.35f) 
+                    else Color.White.copy(alpha = 0.15f),
+                Color.Transparent
+            )
+        )
+        val borderBrush = Brush.linearGradient(
+            colors = listOf(borderColor, borderColor.copy(alpha = 0.1f), borderColor)
+        )
+        onDrawWithContent {
+            drawContent()
+            // Top shimmer line
+            drawRect(shimmerBrush, size = androidx.compose.ui.geometry.Size(size.width, 1.dp.toPx()))
+            // Subtle inner radial
+            drawRect(
+                brush = Brush.radialGradient(
+                    colors = listOf(Color.White.copy(alpha = 0.04f), Color.Transparent),
+                    center = Offset(size.width / 2, 0f),
+                    radius = size.maxDimension * 0.6f
+                ),
+                blendMode = BlendMode.SrcOver
+            )
+        }
+    }
     .border(1.dp, borderColor, shape)
     .drawWithCache {
         onDrawWithContent {
@@ -340,34 +372,67 @@ fun FloatingTopBar(
 fun MaterialGlassCard(
     modifier: Modifier = Modifier,
     header: String? = null,
-    onClick: (() -> Unit)? = null,
+    accentColor: Color? = null,
     containerColor: Color? = null,
     borderColor: Color? = null,
+    onClick: (() -> Unit)? = null,
     content: @Composable ColumnScope.() -> Unit
 ) {
     val colorScheme = MaterialTheme.colorScheme
     val shape = RoundedCornerShape(28.dp)
-    
-    // Determine effective colors with defaults
-    val effectiveContainer = containerColor ?: colorScheme.surfaceVariant.copy(alpha = 0.5f)
-    val effectiveBorder = borderColor ?: colorScheme.outlineVariant.copy(alpha = 0.3f)
-    
-    Box(
-        modifier = modifier
-            .fillMaxWidth()
-            .let { if (onClick != null) it.clickable { onClick() } else it }
-            .frostedGlass(
-                backgroundColor = effectiveContainer,
-                borderColor = effectiveBorder,
-                shape = shape
-            )
-    ) {
-        Column(modifier = Modifier.padding(24.dp)) {
-            if (header != null) {
-                Text(header, style = MaterialTheme.typography.titleMedium, color = colorScheme.onSurface)
-                Spacer(Modifier.height(16.dp))
+    val accent = accentColor ?: colorScheme.primary
+    val bg = containerColor ?: colorScheme.surfaceVariant.copy(alpha = 0.5f)
+
+    // Automate active toggle tracking
+    val activeToggleCount = remember { mutableIntStateOf(0) }
+    val cardHasActiveToggle = activeToggleCount.intValue > 0
+
+    val resolvedBorderColor = borderColor ?: if (cardHasActiveToggle)
+        accent.copy(alpha = 0.25f)
+    else
+        colorScheme.outlineVariant.copy(alpha = 0.3f)
+
+    CompositionLocalProvider(LocalCardActiveToggleCount provides activeToggleCount) {
+        Box(
+            modifier = modifier
+                .fillMaxWidth()
+                .let { if (onClick != null) it.clickable { onClick() } else it }
+                .frostedGlass(
+                    backgroundColor = bg,
+                    borderColor = resolvedBorderColor,
+                    shape = shape,
+                    accentColor = accent
+                )
+        ) {
+            Column(modifier = Modifier.padding(24.dp)) {
+                if (header != null) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier.padding(bottom = 16.dp)
+                    ) {
+                        Box(
+                            modifier = Modifier
+                                .size(7.dp)
+                                .clip(CircleShape)
+                                .background(accent)
+                                .graphicsLayer {
+                                    shadowElevation = 12f
+                                    ambientShadowColor = accent
+                                    spotShadowColor = accent
+                                }
+                        )
+                        Spacer(Modifier.width(8.dp))
+                        Text(
+                            header,
+                            style = MaterialTheme.typography.labelMedium,
+                            color = colorScheme.onSurface.copy(alpha = 0.5f),
+                            fontWeight = FontWeight.SemiBold,
+                            letterSpacing = 1.sp
+                        )
+                    }
+                }
+                content()
             }
-            content()
         }
     }
 }
@@ -463,17 +528,73 @@ fun NavRow(title: String, sub: String, icon: ImageVector, onClick: () -> Unit) {
 }
 
 @Composable
-fun XinyaToggle(title: String, subtitle: String, icon: ImageVector, checked: Boolean, onCheckedChange: (Boolean) -> Unit, isRisk: Boolean = false) {
+fun XinyaToggle(
+    title: String, subtitle: String, icon: ImageVector,
+    checked: Boolean, onCheckedChange: (Boolean) -> Unit,
+    isRisk: Boolean = false,
+    iconTint: Color? = null
+) {
     val colorScheme = MaterialTheme.colorScheme
-    val activeColor = if(isRisk) colorScheme.error else colorScheme.onSurface
-    Row(Modifier.fillMaxWidth().clickable { onCheckedChange(!checked) }.padding(vertical = 8.dp), verticalAlignment = Alignment.CenterVertically) {
-        Icon(icon, null, tint = activeColor, modifier = Modifier.size(24.dp))
-        Spacer(Modifier.width(16.dp))
-        Column(Modifier.weight(1f)) {
-            Text(title, fontWeight = FontWeight.Bold, color = activeColor)
-            Text(subtitle, style = MaterialTheme.typography.labelSmall, color = colorScheme.onSurfaceVariant)
+    val accent = when {
+        isRisk -> colorScheme.error
+        iconTint != null -> iconTint
+        else -> colorScheme.primary
+    }
+
+    val activeToggleCount = LocalCardActiveToggleCount.current
+    DisposableEffect(checked) {
+        if (checked) {
+            activeToggleCount.intValue += 1
         }
-        Switch(checked = checked, onCheckedChange = onCheckedChange)
+        onDispose {
+            if (checked) {
+                activeToggleCount.intValue -= 1
+            }
+        }
+    }
+
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable { onCheckedChange(!checked) }
+            .padding(vertical = 12.dp, horizontal = 16.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Icon(
+            icon,
+            contentDescription = null,
+            tint = if (checked) accent else colorScheme.onSurfaceVariant,
+            modifier = Modifier.size(24.dp)
+        )
+        
+        Spacer(Modifier.width(16.dp))
+        
+        Column(Modifier.weight(1f)) {
+            Text(
+                title,
+                fontWeight = FontWeight.Bold,
+                color = if (checked) colorScheme.onSurface else colorScheme.onSurface.copy(alpha = 0.7f)
+            )
+            Spacer(Modifier.height(2.dp))
+            Text(
+                subtitle, 
+                style = MaterialTheme.typography.labelSmall,
+                color = colorScheme.onSurfaceVariant, 
+                lineHeight = 16.sp
+            )
+        }
+        
+        Switch(
+            checked = checked, onCheckedChange = onCheckedChange,
+            colors = SwitchDefaults.colors(
+                checkedThumbColor = Color.White,
+                checkedTrackColor = accent,
+                checkedBorderColor = Color.Transparent,
+                uncheckedThumbColor = colorScheme.outline,
+                uncheckedTrackColor = colorScheme.surfaceVariant,
+                uncheckedBorderColor = Color.Transparent
+            )
+        )
     }
 }
 

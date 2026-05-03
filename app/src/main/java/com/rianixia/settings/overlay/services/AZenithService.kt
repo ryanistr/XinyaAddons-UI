@@ -1,3 +1,4 @@
+// AZenithService.kt
 package com.rianixia.settings.overlay.services
 
 import android.app.Notification
@@ -19,7 +20,6 @@ import com.rianixia.settings.overlay.data.SystemProps
 import kotlinx.coroutines.*
 
 class AZenithService : Service() {
-
     private val serviceScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
     private var monitoringJob: Job? = null
     
@@ -42,7 +42,6 @@ class AZenithService : Service() {
         if (intent?.action == ACTION_STOP_SERVICE) {
             stopSelf()
         }
-
         return START_STICKY
     }
 
@@ -57,21 +56,20 @@ class AZenithService : Service() {
         monitoringJob = serviceScope.launch {
             while (isActive) {
                 pollGameInfo()
-                delay(1500) 
+                delay(1500)
             }
         }
     }
 
     private suspend fun pollGameInfo() {
-        // REPLACED: Shell execution with SystemProps
         val infoLine = SystemProps.get("sys.azenith.gameinfo")
         val parts = infoLine.split(" ")
         
         if (parts.isEmpty()) return
-
         val rawPackage = parts[0]
         
-        if (rawPackage == "NULL" || rawPackage.isBlank()) {
+        // Disabled trigger on menu screen open by enforcing idle state when rawPackage matches this application's package
+        if (rawPackage == "NULL" || rawPackage.isBlank() || rawPackage == packageName) {
             if (isProfileActive) {
                 isProfileActive = false
                 lastPackageName = ""
@@ -103,7 +101,6 @@ class AZenithService : Service() {
                 this, 0, intent,
                 PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
             )
-
             val revertIntent = Intent(this, MainActivity::class.java)
             val revertPendingIntent = PendingIntent.getActivity(
                 this, 1, revertIntent,
@@ -111,18 +108,16 @@ class AZenithService : Service() {
             )
             
             val largeIcon = getAppIcon(pkgName)
-
             val notification = NotificationCompat.Builder(this, CHANNEL_ID)
-                .setContentTitle(getString(R.string.az_notif_active_title)) 
-                .setContentText(getString(R.string.az_notif_active_desc, appName)) 
-                .setSmallIcon(R.drawable.ic_launcher_foreground) 
-                .setLargeIcon(largeIcon) 
+                .setContentTitle(getString(R.string.az_notif_active_title))
+                .setContentText(getString(R.string.az_notif_active_desc, appName))
+                .setSmallIcon(R.drawable.ic_launcher_foreground)
+                .setLargeIcon(largeIcon)
                 .setContentIntent(pendingIntent)
                 .setOngoing(true)
-                .setPriority(NotificationCompat.PRIORITY_HIGH) 
+                .setPriority(NotificationCompat.PRIORITY_HIGH)
                 .addAction(R.drawable.ic_launcher_foreground, "Settings", revertPendingIntent)
                 .build()
-
             notificationManager.notify(NOTIFICATION_ID, notification)
         }
     }
@@ -133,7 +128,6 @@ class AZenithService : Service() {
             this, 0, intent,
             PendingIntent.FLAG_IMMUTABLE
         )
-
         return NotificationCompat.Builder(this, CHANNEL_ID)
             .setContentTitle("AZenith Monitor")
             .setContentText("Engine Ready")
@@ -141,7 +135,7 @@ class AZenithService : Service() {
             .setContentIntent(pendingIntent)
             .setOngoing(true)
             .setForegroundServiceBehavior(NotificationCompat.FOREGROUND_SERVICE_IMMEDIATE)
-            .setPriority(NotificationCompat.PRIORITY_DEFAULT) 
+            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
             .build()
     }
 
@@ -151,7 +145,7 @@ class AZenithService : Service() {
             val info = pm.getApplicationInfo(packageName, 0)
             pm.getApplicationLabel(info).toString()
         } catch (e: Exception) {
-            packageName 
+            packageName
         }
     }
     
@@ -186,7 +180,7 @@ class AZenithService : Service() {
             ).apply {
                 description = "Notifications for active game optimization profiles"
                 setShowBadge(true)
-                enableVibration(true) 
+                enableVibration(true)
             }
             val manager = getSystemService(NotificationManager::class.java)
             manager.createNotificationChannel(channel)
@@ -195,7 +189,7 @@ class AZenithService : Service() {
 
     companion object {
         const val TAG = "AZenithService"
-        const val CHANNEL_ID = "azenith_profiles_v2" 
+        const val CHANNEL_ID = "azenith_profiles_v2"
         const val NOTIFICATION_ID = 9090
         const val ACTION_STOP_SERVICE = "com.rianixia.settings.overlay.STOP_AZENITH"
     }

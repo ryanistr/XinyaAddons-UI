@@ -1,5 +1,4 @@
 // File: app/src/main/java/com/rianixia/settings/overlay/ui/screens/IntegrityNSpoofingScreen.kt
-
 package com.rianixia.settings.overlay.ui.screens
 
 import android.net.Uri
@@ -278,7 +277,9 @@ fun IntegrityNSpoofingScreen(
                                                     )
                                                 }
                                             }
+
                                             Spacer(Modifier.height(16.dp))
+
                                             Button(
                                                 onClick = { xmlImportLauncher.launch("*/*") },
                                                 modifier = Modifier.fillMaxWidth().height(56.dp),
@@ -291,6 +292,33 @@ fun IntegrityNSpoofingScreen(
                                                 Icon(Icons.Rounded.UploadFile, contentDescription = null, modifier = Modifier.size(20.dp))
                                                 Spacer(Modifier.width(12.dp))
                                                 Text(stringResource(R.string.pif_import_keybox), fontWeight = FontWeight.Bold, style = MaterialTheme.typography.titleMedium)
+                                            }
+
+                                            Spacer(Modifier.height(16.dp))
+
+                                            Button(
+                                                onClick = { viewModel.fetchCustomPifJson() },
+                                                enabled = !state.isPifFetching,
+                                                modifier = Modifier.fillMaxWidth().height(56.dp),
+                                                colors = ButtonDefaults.buttonColors(
+                                                    containerColor = MaterialTheme.colorScheme.secondaryContainer,
+                                                    contentColor = MaterialTheme.colorScheme.onSecondaryContainer
+                                                ),
+                                                shape = RoundedCornerShape(12.dp)
+                                            ) {
+                                                if (state.isPifFetching) {
+                                                    CircularProgressIndicator(
+                                                        modifier = Modifier.size(20.dp),
+                                                        strokeWidth = 2.dp,
+                                                        color = MaterialTheme.colorScheme.onSecondaryContainer
+                                                    )
+                                                    Spacer(Modifier.width(12.dp))
+                                                    Text("Fetching...", fontWeight = FontWeight.Bold, style = MaterialTheme.typography.titleMedium)
+                                                } else {
+                                                    Icon(Icons.Rounded.Download, contentDescription = null, modifier = Modifier.size(20.dp))
+                                                    Spacer(Modifier.width(12.dp))
+                                                    Text("Fetch Fingerprint", fontWeight = FontWeight.Bold, style = MaterialTheme.typography.titleMedium)
+                                                }
                                             }
                                         }
                                     }
@@ -518,6 +546,7 @@ private fun GamePropsControlPanel(
             ) {
                 Column {
                     MaterialDivider()
+
                     Row(
                         Modifier
                             .fillMaxWidth()
@@ -830,6 +859,7 @@ private fun SimpleInputDialog(
     onConfirm: (String) -> Unit
 ) {
     var text by remember { mutableStateOf("") }
+
     AlertDialog(
         onDismissRequest = onDismiss,
         title = { Text(title) },
@@ -853,6 +883,7 @@ private fun AppSelectionDialog(
             it.packageName.contains(searchQuery, ignoreCase = true)
         }
     }
+
     AlertDialog(
         onDismissRequest = onDismiss,
         title = { Text(stringResource(R.string.dialog_select_app)) },

@@ -120,13 +120,9 @@ fun SystemScreen(
         }
     }
 }
-
 @Composable
 fun IdentityMatrixCard(onClick: () -> Unit) {
     val color = MaterialTheme.colorScheme.primary
-    val bg = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f)
-    val border = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.3f)
-
     val infiniteTransition = rememberInfiniteTransition(label = "scan")
     val scanY by infiniteTransition.animateFloat(
         initialValue = 0f,
@@ -139,10 +135,13 @@ fun IdentityMatrixCard(onClick: () -> Unit) {
         modifier = Modifier
             .fillMaxWidth()
             .height(160.dp)
-            .clip(RoundedCornerShape(28.dp))
-            .background(bg)
-            .border(1.dp, border, RoundedCornerShape(28.dp))
             .clickable { onClick() }
+            .frostedGlass(
+                backgroundColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f),
+                borderColor = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.3f),
+                shape = RoundedCornerShape(28.dp),
+                accentColor = color
+            )
     ) {
         Canvas(modifier = Modifier.fillMaxSize().alpha(0.1f)) {
             val yPos = size.height * scanY
@@ -162,7 +161,6 @@ fun IdentityMatrixCard(onClick: () -> Unit) {
                 size = androidx.compose.ui.geometry.Size(size.width, 50f)
             )
         }
-
         Column(
             modifier = Modifier.fillMaxSize().padding(24.dp),
             verticalArrangement = Arrangement.SpaceBetween
@@ -180,7 +178,6 @@ fun IdentityMatrixCard(onClick: () -> Unit) {
                 )
                 Icon(Icons.Rounded.Fingerprint, null, tint = color)
             }
-
             Column {
                 Text(
                     stringResource(R.string.identity_spoofing),
@@ -211,10 +208,13 @@ fun SystemModuleCard(
     Box(
         modifier = modifier
             .height(120.dp)
-            .clip(RoundedCornerShape(24.dp))
-            .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f))
-            .border(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.3f), RoundedCornerShape(24.dp))
             .clickable { onClick() }
+            .frostedGlass(
+                backgroundColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f),
+                borderColor = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.3f),
+                shape = RoundedCornerShape(24.dp),
+                accentColor = color
+            )
             .padding(16.dp)
     ) {
         Column(
@@ -248,23 +248,9 @@ fun SystemPropsBank(
     onToggleSecure: (Boolean) -> Unit,
     onToggleRotation: (Boolean) -> Unit
 ) {
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clip(RoundedCornerShape(28.dp))
-            .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.2f))
-            .border(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.2f), RoundedCornerShape(28.dp))
-            .padding(20.dp),
-        verticalArrangement = Arrangement.spacedBy(4.dp)
+    MaterialGlassCard(
+        header = stringResource(R.string.sys_tuner_title)
     ) {
-        Text(
-            stringResource(R.string.sys_tuner_title),
-            style = MaterialTheme.typography.labelSmall,
-            fontWeight = FontWeight.Black,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
-            modifier = Modifier.padding(bottom = 8.dp, start = 4.dp)
-        )
-        
         XinyaToggle(
             title = stringResource(R.string.sys_flag_secure_title),
             subtitle = stringResource(R.string.sys_flag_secure_desc),

@@ -27,6 +27,13 @@ import androidx.navigation.NavController
 import com.rianixia.settings.overlay.R
 import com.rianixia.settings.overlay.ui.components.*
 import com.rianixia.settings.overlay.ui.viewmodel.HomeViewModel
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.core.FastOutSlowInEasing
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.withContext
+import java.io.File
 
 // ==========================================
 // ROOT PERFORMANCE DASHBOARD
@@ -105,19 +112,37 @@ fun PerformanceScreen(
 @Composable
 fun CpuClusterCard(onClick: () -> Unit) {
     val color = MaterialTheme.colorScheme.primary
-    val bg = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f)
-    val border = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.3f)
+    val coreLoads = remember { mutableStateListOf(0.1f, 0.1f, 0.1f, 0.1f, 0.1f, 0.1f, 0.1f, 0.1f) }
+
+    LaunchedEffect(Unit) {
+        withContext(Dispatchers.IO) {
+            while (true) {
+                for (i in 0 until 8) {
+                    try {
+                        val curFreq = File("/sys/devices/system/cpu/cpu$i/cpufreq/scaling_cur_freq").readText().trim().toFloat()
+                        val maxFreq = File("/sys/devices/system/cpu/cpu$i/cpufreq/cpuinfo_max_freq").readText().trim().toFloat()
+                        coreLoads[i] = if (maxFreq > 0) curFreq / maxFreq else 0.1f
+                    } catch (e: Exception) {
+                        coreLoads[i] = 0.1f // Fallback for offline cores or denied access
+                    }
+                }
+                delay(800)
+            }
+        }
+    }
 
     Box(
         modifier = Modifier
             .fillMaxWidth()
             .height(180.dp)
-            .clip(RoundedCornerShape(28.dp))
-            .background(bg)
-            .border(1.dp, border, RoundedCornerShape(28.dp))
             .clickable { onClick() }
+            .frostedGlass(
+                backgroundColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f),
+                borderColor = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.3f),
+                shape = RoundedCornerShape(28.dp),
+                accentColor = color
+            )
     ) {
-        // Tech Background Grid
         Canvas(modifier = Modifier.fillMaxSize().alpha(0.05f)) {
             val step = 20.dp.toPx()
             val count = (size.width / step).toInt()
@@ -135,7 +160,6 @@ fun CpuClusterCard(onClick: () -> Unit) {
             modifier = Modifier.fillMaxSize().padding(24.dp),
             verticalArrangement = Arrangement.SpaceBetween
         ) {
-            // Top Row: Label & Status
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
@@ -149,19 +173,16 @@ fun CpuClusterCard(onClick: () -> Unit) {
                 Icon(Icons.Rounded.Memory, null, tint = color.copy(alpha = 0.5f))
             }
 
-            // Middle: Animated Core Visualizer
             Row(
                 modifier = Modifier.fillMaxWidth().height(60.dp),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.Bottom
             ) {
-                // Simulate 8 Cores
-                repeat(8) {
-                    AnimatedLoadBar(color = color, delay = it * 100)
+                repeat(8) { index ->
+                    AnimatedLoadBar(color = color, loadPercentage = coreLoads[index])
                 }
             }
 
-            // Bottom: Description
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
@@ -178,15 +199,10 @@ fun CpuClusterCard(onClick: () -> Unit) {
 }
 
 @Composable
-fun AnimatedLoadBar(color: Color, delay: Int) {
-    val infiniteTransition = rememberInfiniteTransition(label = "load")
-    val heightScale by infiniteTransition.animateFloat(
-        initialValue = 0.3f,
-        targetValue = 1f,
-        animationSpec = infiniteRepeatable(
-            animation = tween(1000, delayMillis = delay, easing = FastOutSlowInEasing),
-            repeatMode = RepeatMode.Reverse
-        ),
+fun AnimatedLoadBar(color: Color, loadPercentage: Float) {
+    val heightScale by animateFloatAsState(
+        targetValue = loadPercentage.coerceIn(0.1f, 1f),
+        animationSpec = tween(durationMillis = 300, easing = FastOutSlowInEasing),
         label = "height"
     )
 
@@ -232,7 +248,8 @@ fun GameBoostCard(modifier: Modifier, onClick: () -> Unit) {
 fun UndervoltCard(modifier: Modifier, undervoltValue: Int, onClick: () -> Unit) {
     val isActive = undervoltValue < 0
     val color = if (isActive) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.primary
-    val displayValue = if (isActive) "${undervoltValue * 6}" else "0"
+    
+    val displayValue = if (isActive) "${kotlin.math.abs(undervoltValue)}" else "0"
     
     DashboardModule(
         modifier = modifier,
@@ -242,9 +259,8 @@ fun UndervoltCard(modifier: Modifier, undervoltValue: Int, onClick: () -> Unit) 
         color = color,
         onClick = onClick
     ) {
-        // Visual: Dynamic Voltage value
         Text(
-            text = displayValue + stringResource(R.string.unit_mv).trim(),
+            text = "$displayValue Steps",
             style = MaterialTheme.typography.labelLarge,
             fontWeight = FontWeight.Black,
             color = color
@@ -265,10 +281,13 @@ fun DashboardModule(
     Box(
         modifier = modifier
             .height(140.dp)
-            .clip(RoundedCornerShape(24.dp))
-            .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f))
-            .border(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.3f), RoundedCornerShape(24.dp))
             .clickable { onClick() }
+            .frostedGlass(
+                backgroundColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f),
+                borderColor = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.3f),
+                shape = RoundedCornerShape(24.dp),
+                accentColor = color
+            )
             .padding(16.dp)
     ) {
         Column(
@@ -305,14 +324,18 @@ fun DashboardModule(
 @Composable
 fun IoSchedulerCard(onClick: () -> Unit) {
     val color = MaterialTheme.colorScheme.secondary
+
     Box(
         modifier = Modifier
             .fillMaxWidth()
             .height(100.dp)
-            .clip(RoundedCornerShape(24.dp))
-            .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f))
-            .border(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.3f), RoundedCornerShape(24.dp))
             .clickable { onClick() }
+            .frostedGlass(
+                backgroundColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f),
+                borderColor = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.3f),
+                shape = RoundedCornerShape(24.dp),
+                accentColor = color
+            )
             .padding(20.dp)
     ) {
         Row(

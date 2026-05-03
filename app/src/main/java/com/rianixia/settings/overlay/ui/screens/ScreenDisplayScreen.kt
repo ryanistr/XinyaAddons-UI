@@ -1,14 +1,17 @@
+// File: main/java/com/rianixia/settings/overlay/ui/screens/ScreenDisplayScreen.kt
 package com.rianixia.settings.overlay.ui.screens
 
+import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.BrightnessLow
@@ -30,6 +33,8 @@ import com.rianixia.settings.overlay.ui.viewmodel.ScreenDisplayViewModel
 import dev.chrisbanes.haze.HazeState
 import dev.chrisbanes.haze.hazeSource
 
+private const val TAG = "ScreenDisplay"
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ScreenDisplayScreen(
@@ -42,23 +47,34 @@ fun ScreenDisplayScreen(
     
     val hazeState = remember { HazeState() }
     
-    // Transient UI state for the selected resolution before applying
     var selectedResolution by remember { mutableStateOf<String?>(null) }
+
+    LaunchedEffect(selectedResolution, resState.currentRes, resState.pendingRes) {
+        val isDefaultRedundant = selectedResolution == "Reset" && resState.currentRes == resState.physicalRes
+        val showFab = selectedResolution != null && selectedResolution != resState.currentRes && !isDefaultRedundant
+        Log.d(TAG, "UI State Check -> selectedRes: $selectedResolution | currentRes: ${resState.currentRes} | pendingRes: ${resState.pendingRes} | showFab evaluates to: $showFab")
+    }
 
     if (resState.pendingRes != null) {
         AlertDialog(
             onDismissRequest = { },
             title = { Text("Confirm Resolution", fontWeight = FontWeight.Bold) },
-            text = { 
-                Text("Do you want to keep the new screen resolution? Reverting to previous state in ${resState.countdown} seconds.") 
+            text = {
+                Text("Do you want to keep the new screen resolution? Reverting to previous state in ${resState.countdown} seconds.")
             },
             confirmButton = {
-                Button(onClick = { viewModel.confirmResolution() }) {
+                Button(onClick = {
+                    Log.d(TAG, "Dialog: Keep Changes clicked")
+                    viewModel.confirmResolution()
+                }) {
                     Text("Keep Changes")
                 }
             },
             dismissButton = {
-                TextButton(onClick = { viewModel.revertResolution() }) {
+                TextButton(onClick = {
+                    Log.d(TAG, "Dialog: Revert clicked")
+                    viewModel.revertResolution()
+                }) {
                     Text("Revert")
                 }
             },
@@ -73,7 +89,6 @@ fun ScreenDisplayScreen(
 
     MaterialGlassScaffold {
         Box(Modifier.fillMaxSize()) {
-            
             BouncyLazyColumn(
                 modifier = Modifier
                     .fillMaxSize()
@@ -84,11 +99,12 @@ fun ScreenDisplayScreen(
                 item {
                     MaterialGlassCard(header = "Display Matrix") {
                         XinyaToggle(
-                            title = "VSync Synchronization",
-                            subtitle = "Synchronize frame rates to prevent screen tearing",
+                            title = "VSync",
+                            subtitle = "Synchronize frame rates to prevent screen tearing. Disabling may improve performance and touch responsiveness at the cost of potential visual artifacts.",
                             icon = Icons.Rounded.Sync,
                             checked = vSync,
-                            onCheckedChange = { viewModel.toggleVSync(it) }
+                            onCheckedChange = { viewModel.toggleVSync(it) },
+                            iconTint = MaterialTheme.colorScheme.tertiary
                         )
                         MaterialDivider()
                         Column {
@@ -97,7 +113,8 @@ fun ScreenDisplayScreen(
                                 subtitle = "Reduce brightness below the minimum system level",
                                 icon = Icons.Rounded.BrightnessLow,
                                 checked = extraDim,
-                                onCheckedChange = { viewModel.toggleExtraDim(it) }
+                                onCheckedChange = { viewModel.toggleExtraDim(it) },
+                                iconTint = MaterialTheme.colorScheme.secondary
                             )
                             AnimatedVisibility(visible = extraDim) {
                                 val intensity by viewModel.extraDimIntensity.collectAsState()
@@ -126,12 +143,36 @@ fun ScreenDisplayScreen(
                 
                 item {
                     MaterialGlassCard(header = "Render Resolution Target") {
-                        Text(
-                            text = "Current: ${resState.currentRes}", 
-                            style = MaterialTheme.typography.labelMedium,
-                            color = MaterialTheme.colorScheme.primary,
-                            modifier = Modifier.padding(bottom = 12.dp)
-                        )
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            modifier = Modifier.padding(bottom = 14.dp)
+                        ) {
+                            Box(
+                                modifier = Modifier
+                                    .clip(RoundedCornerShape(20.dp))
+                                    .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.12f))
+                                    .border(1.dp, MaterialTheme.colorScheme.primary.copy(alpha = 0.25f), RoundedCornerShape(20.dp))
+                                    .padding(horizontal = 12.dp, vertical = 5.dp)
+                            ) {
+                                Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+                                    Box(
+                                        Modifier.size(6.dp).clip(CircleShape)
+                                            .background(MaterialTheme.colorScheme.primary)
+                                    )
+                                    Text(
+                                        text = resState.currentRes,
+                                        style = MaterialTheme.typography.labelSmall,
+                                        fontWeight = FontWeight.Bold,
+                                        color = MaterialTheme.colorScheme.primary
+                                    )
+                                    Text(
+                                        text = "active",
+                                        style = MaterialTheme.typography.labelSmall,
+                                        color = MaterialTheme.colorScheme.primary.copy(alpha = 0.6f)
+                                    )
+                                }
+                            }
+                        }
                         
                         if (resState.availableResolutions.isEmpty() || resState.currentRes == "Loading...") {
                             Box(
@@ -141,36 +182,23 @@ fun ScreenDisplayScreen(
                                 CircularProgressIndicator(color = MaterialTheme.colorScheme.primary)
                             }
                         } else {
-                            Row(
-                                horizontalArrangement = Arrangement.spacedBy(8.dp),
-                                modifier = Modifier.fillMaxWidth().horizontalScroll(rememberScrollState())
-                            ) {
-                                resState.availableResolutions.forEach { res ->
-                                    val title = if (res == "Reset") "Default" else "${res.substringBefore('x')}p"
-                                    val sub = if (res == "Reset") "Native" else res
-                                    
-                                    val isSelected = if (selectedResolution != null) {
-                                        selectedResolution == res
-                                    } else {
-                                        resState.currentRes == res || (res == "Reset" && resState.currentRes == resState.physicalRes)
-                                    }
-                                    
-                                    Box(
-                                        modifier = Modifier
-                                            .clip(RoundedCornerShape(16.dp))
-                                            .clickable(enabled = resState.pendingRes == null) {
-                                                selectedResolution = res
-                                            }
-                                    ) {
-                                        ResoChip(
-                                            modifier = Modifier.width(120.dp),
-                                            title = title,
-                                            sub = sub,
-                                            selected = isSelected
-                                        )
-                                    }
-                                }
-                            }
+                            val currentActiveRes = if (resState.currentRes == resState.physicalRes && resState.physicalRes != "Unknown") "Reset" else resState.currentRes
+                            val displayedSelection = selectedResolution ?: currentActiveRes
+                            GlassDropdown(
+                                label = "Select Resolution",
+                                options = resState.availableResolutions,
+                                selectedOption = displayedSelection,
+                                onOptionSelected = { res ->
+                                    Log.d(TAG, "Resolution dropdown selected: $res")
+                                    selectedResolution = res
+                                },
+                                itemLabelMapper = { res ->
+                                    if (res == "Reset") "Default (Native)" else "${res.substringBefore('x')}p ($res)"
+                                },
+                                enabled = resState.pendingRes == null,
+                                color = MaterialTheme.colorScheme.primary,
+                                hazeState = hazeState
+                            )
                         }
                     }
                 }
@@ -185,13 +213,11 @@ fun ScreenDisplayScreen(
                 addStatusBarPadding = true
             )
 
-            // Calculate FAB visibility
             val isDefaultRedundant = selectedResolution == "Reset" && resState.currentRes == resState.physicalRes
             val showFab = selectedResolution != null && selectedResolution != resState.currentRes && !isDefaultRedundant
-
             AnimatedVisibility(
                 visible = showFab,
-                enter = fadeIn() + slideInHorizontally { -it }, // Slide in from the left
+                enter = fadeIn() + slideInHorizontally { -it },
                 exit = fadeOut() + slideOutHorizontally { -it },
                 modifier = Modifier
                     .align(Alignment.BottomStart)
@@ -199,7 +225,11 @@ fun ScreenDisplayScreen(
             ) {
                 FloatingActionButton(
                     onClick = {
-                        selectedResolution?.let { viewModel.changeResolutionImmediate(it) }
+                        Log.d(TAG, "FAB clicked to apply resolution: $selectedResolution")
+                        selectedResolution?.let { 
+                            Log.d(TAG, "Calling viewModel.changeResolutionImmediate($it)")
+                            viewModel.changeResolutionImmediate(it) 
+                        }
                         selectedResolution = null
                     },
                     containerColor = MaterialTheme.colorScheme.primary,

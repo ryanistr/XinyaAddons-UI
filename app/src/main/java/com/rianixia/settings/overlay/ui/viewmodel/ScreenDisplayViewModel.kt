@@ -2,6 +2,7 @@ package com.rianixia.settings.overlay.ui.viewmodel
 
 import android.app.Application
 import android.content.Intent
+import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
@@ -27,6 +28,11 @@ data class ResolutionState(
 )
 
 class ScreenDisplayViewModel(application: Application) : AndroidViewModel(application) {
+    
+    companion object {
+        private const val TAG = "ScreenDisplayVM"
+    }
+
     private val _vSyncEnabled = MutableStateFlow(true)
     val vSyncEnabled: StateFlow<Boolean> = _vSyncEnabled
 
@@ -48,17 +54,21 @@ class ScreenDisplayViewModel(application: Application) : AndroidViewModel(applic
     private var countdownJob: Job? = null
 
     init {
+        Log.i(TAG, "Initializing ScreenDisplayViewModel...")
         fetchDisplayStates()
         fetchCurrentResolution()
     }
 
-    // --- Native Property Reflection (Bypasses 'sh' overhead) ---
+    // --- Native Property Reflection ---
     private fun setSystemProperty(key: String, value: String) {
+        Log.d(TAG, "setSystemProperty: Requesting write -> [$key] = [$value]")
         try {
             val clazz = Class.forName("android.os.SystemProperties")
             val setMethod = clazz.getMethod("set", String::class.java, String::class.java)
             setMethod.invoke(null, key, value)
+            Log.d(TAG, "setSystemProperty: SUCCESS -> [$key] = [$value]")
         } catch (e: Exception) {
+            Log.e(TAG, "setSystemProperty: FAILED to write [$key]", e)
             e.printStackTrace()
         }
     }
@@ -68,21 +78,29 @@ class ScreenDisplayViewModel(application: Application) : AndroidViewModel(applic
             val clazz = Class.forName("android.os.SystemProperties")
             val getMethod = clazz.getMethod("get", String::class.java, String::class.java)
             val result = getMethod.invoke(null, key, default) as? String
-            if (result.isNullOrBlank()) default else result
-        } catch (e: Exception) { default }
+            val finalResult = if (result.isNullOrBlank()) default else result
+            Log.d(TAG, "getSystemProperty: Read [$key] -> [$finalResult]")
+            finalResult
+        } catch (e: Exception) {
+            Log.e(TAG, "getSystemProperty: FAILED to read [$key], falling back to default [$default]", e)
+            default
+        }
     }
 
     private fun fetchDisplayStates() {
+        Log.d(TAG, "fetchDisplayStates: Starting state fetch")
         viewModelScope.launch(Dispatchers.IO) {
             val vSyncState = getSystemProperty("persist.sys.rianixia.display.vsync", "-1")
             val extraDimState = getSystemProperty("persist.sys.rianixia.display.extradim", "0")
             val dimIntensityStr = getSystemProperty("persist.sys.rianixia.display.dim_intensity", "0.5")
+            
             val dimIntensity = dimIntensityStr.toFloatOrNull() ?: 0.5f
 
             withContext(Dispatchers.Main) {
                 _vSyncEnabled.value = vSyncState == "-1"
                 _extraDimEnabled.value = extraDimState == "1"
                 _extraDimIntensity.value = dimIntensity
+                Log.d(TAG, "fetchDisplayStates: States updated in UI. VSync:${_vSyncEnabled.value}, ExtraDim:${_extraDimEnabled.value}")
 
                 if (extraDimState == "1") {
                     applyExtraDimState(true, dimIntensity)
@@ -92,14 +110,17 @@ class ScreenDisplayViewModel(application: Application) : AndroidViewModel(applic
     }
 
     fun fetchCurrentResolution() {
+        Log.d(TAG, "fetchCurrentResolution: Starting fetch")
         viewModelScope.launch(Dispatchers.IO) {
             val current = getSystemProperty("persist.sys.rianixia.res.current", "Unknown")
             val original = getSystemProperty("persist.sys.rianixia.res.original", "Unknown")
             val availableStr = getSystemProperty("persist.sys.rianixia.res.available", "")
-
+            
             val dynamicResolutions = availableStr.split(",")
-                .map { it.trim() } // Ensure clean parsing
+                .map { it.trim() }
                 .filter { it.isNotBlank() }
+
+            Log.d(TAG, "fetchCurrentResolution: Parsed UI Data -> Current: $current | Original: $original | Available: $dynamicResolutions")
 
             _resState.update {
                 it.copy(
@@ -112,17 +133,23 @@ class ScreenDisplayViewModel(application: Application) : AndroidViewModel(applic
     }
 
     fun changeResolutionImmediate(newRes: String) {
+        Log.i(TAG, "changeResolutionImmediate: Invoked for target -> $newRes")
         val current = _resState.value.currentRes
-        if (current == newRes || _resState.value.pendingRes != null || (newRes == "Reset" && current == _resState.value.physicalRes)) return
+        
+        if (current == newRes || _resState.value.pendingRes != null || (newRes == "Reset" && current == _resState.value.physicalRes)) {
+            Log.w(TAG, "changeResolutionImmediate: Aborted due to redundant request or existing pending state.")
+            return
+        }
 
+        Log.d(TAG, "changeResolutionImmediate: Transitioning to pending state for -> $newRes")
         _resState.update { it.copy(pendingRes = newRes, originalRes = current, countdown = 10) }
-
+        
         viewModelScope.launch(Dispatchers.IO) {
             setSystemProperty("persist.sys.rianixia.res.target", newRes)
-
-            delay(1000) // Allow Rust daemon to apply via Binder and update props
+            delay(1000) // Allow daemon to apply
+            
             fetchCurrentResolution()
-
+            
             withContext(Dispatchers.Main) {
                 countdownJob?.cancel()
                 countdownJob = launch {
@@ -130,6 +157,7 @@ class ScreenDisplayViewModel(application: Application) : AndroidViewModel(applic
                         _resState.update { it.copy(countdown = i) }
                         delay(1000)
                     }
+                    Log.w(TAG, "changeResolutionImmediate: Countdown expired. Reverting.")
                     revertResolution()
                 }
             }
@@ -137,18 +165,22 @@ class ScreenDisplayViewModel(application: Application) : AndroidViewModel(applic
     }
 
     fun confirmResolution() {
+        Log.i(TAG, "confirmResolution: User confirmed resolution changes")
         countdownJob?.cancel()
         _resState.update { it.copy(pendingRes = null, originalRes = null) }
         fetchCurrentResolution()
     }
 
     fun revertResolution() {
+        Log.i(TAG, "revertResolution: Reverting to original resolution")
         countdownJob?.cancel()
         viewModelScope.launch(Dispatchers.IO) {
             val original = _resState.value.originalRes
             if (original != null && original != "Unknown" && original != "Reset") {
+                Log.d(TAG, "revertResolution: Restoring original -> $original")
                 setSystemProperty("persist.sys.rianixia.res.target", original)
             } else {
+                Log.d(TAG, "revertResolution: Resetting to native")
                 setSystemProperty("persist.sys.rianixia.res.target", "Reset")
             }
             delay(1000)
@@ -159,6 +191,7 @@ class ScreenDisplayViewModel(application: Application) : AndroidViewModel(applic
 
     // Still required for AppOps execution, as AppOps isn't tied to System Properties
     private fun runShellCommand(command: String): String {
+        Log.d(TAG, "runShellCommand: Executing -> $command")
         return try {
             val process = Runtime.getRuntime().exec(arrayOf("sh", "-c", command))
             val reader = BufferedReader(InputStreamReader(process.inputStream))
@@ -168,14 +201,17 @@ class ScreenDisplayViewModel(application: Application) : AndroidViewModel(applic
                 result.append(line).append("\n")
             }
             process.waitFor()
-            result.toString().trim()
+            val output = result.toString().trim()
+            Log.d(TAG, "runShellCommand: Output -> $output")
+            output
         } catch (e: Exception) {
-            e.printStackTrace()
+            Log.e(TAG, "runShellCommand: Failed", e)
             ""
         }
     }
 
     fun toggleVSync(enabled: Boolean) {
+        Log.d(TAG, "toggleVSync: Invoked -> $enabled")
         _vSyncEnabled.value = enabled
         viewModelScope.launch(Dispatchers.IO) {
             setSystemProperty("persist.sys.rianixia.display.vsync", if (enabled) "-1" else "0")
@@ -183,6 +219,7 @@ class ScreenDisplayViewModel(application: Application) : AndroidViewModel(applic
     }
 
     fun toggleExtraDim(enabled: Boolean) {
+        Log.d(TAG, "toggleExtraDim: Invoked -> $enabled")
         _extraDimEnabled.value = enabled
         viewModelScope.launch(Dispatchers.IO) {
             setSystemProperty("persist.sys.rianixia.display.extradim", if (enabled) "1" else "0")
@@ -191,6 +228,7 @@ class ScreenDisplayViewModel(application: Application) : AndroidViewModel(applic
     }
 
     fun setExtraDimIntensity(intensity: Float) {
+        Log.d(TAG, "setExtraDimIntensity: Invoked -> $intensity")
         _extraDimIntensity.value = intensity
         viewModelScope.launch(Dispatchers.IO) {
             setSystemProperty("persist.sys.rianixia.display.dim_intensity", intensity.toString())
@@ -201,6 +239,7 @@ class ScreenDisplayViewModel(application: Application) : AndroidViewModel(applic
     }
 
     private fun applyExtraDimState(enabled: Boolean, intensity: Float) {
+        Log.d(TAG, "applyExtraDimState: Routing to ExtraDimService -> Enabled: $enabled | Intensity: $intensity")
         val context = getApplication<Application>()
         if (enabled) {
             runShellCommand("appops set com.rianixia.settings.overlay SYSTEM_ALERT_WINDOW allow")

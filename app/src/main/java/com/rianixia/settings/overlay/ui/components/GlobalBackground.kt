@@ -36,6 +36,17 @@ fun GlobalBackground() {
         ) {
             val w = size.width
             val h = size.height
+            val gridSize = 48.dp.toPx()
+            var x = 0f
+            while (x < size.width) {
+                drawLine(Color.White, Offset(x, 0f), Offset(x, size.height), strokeWidth = 0.5f)
+                x += gridSize
+            }
+            var y = 0f
+            while (y < size.height) {
+                drawLine(Color.White, Offset(0f, y), Offset(size.width, y), strokeWidth = 0.5f)
+                y += gridSize
+            }
             // Top-Left Primary Blob
             drawCircle(
                 color = colorScheme.primaryContainer,
@@ -47,6 +58,12 @@ fun GlobalBackground() {
                 color = colorScheme.tertiaryContainer,
                 radius = w * 0.8f,
                 center = Offset(w, h)
+            )
+
+            drawCircle(
+                color = colorScheme.secondary.copy(alpha = 0.35f), // amber/warm if your theme has it
+                radius = w * 0.5f,
+                center = Offset(w * 0.7f, h * 0.42f)
             )
         }
 

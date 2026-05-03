@@ -24,11 +24,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Popup
 import dev.chrisbanes.haze.HazeState
 
-/**
- * A refined GlassDropdown with 2-stage animation (Dot -> Width -> Height)
- * and content-driven sizing.
- * * Updated: Aligns to TopEnd (Right) for smooth expansion from the arrow.
- */
 @Composable
 fun <T> GlassDropdown(
     label: String,
@@ -43,21 +38,17 @@ fun <T> GlassDropdown(
 ) {
     var expanded by remember { mutableStateOf(false) }
 
-    // Master Transition State
     val transitionState = remember { MutableTransitionState(expanded) }
     transitionState.targetState = expanded
     
-    // [FIXED] Replaced deprecated updateTransition with rememberTransition
     val transition = rememberTransition(transitionState, label = "GlassDropdown")
 
-    // Arrow Rotation
     val rotation by transition.animateFloat(
         transitionSpec = { tween(durationMillis = 300, easing = FastOutSlowInEasing) },
         label = "arrowRotation"
     ) { if (it) 180f else 0f }
 
     Column(modifier = modifier) {
-        // Label (Only render if provided)
         if (label.isNotEmpty()) {
             Text(
                 text = label,
@@ -67,7 +58,6 @@ fun <T> GlassDropdown(
             )
         }
 
-        // Trigger
         Box(
             modifier = Modifier
                 .fillMaxWidth()
@@ -106,10 +96,8 @@ fun <T> GlassDropdown(
             }
         }
 
-        // Dropdown Popup
         if (transitionState.currentState || transitionState.targetState) {
             Popup(
-                // Align TopEnd to anchor the menu to the right (arrow side)
                 alignment = Alignment.TopEnd,
                 onDismissRequest = { expanded = false }
             ) {
@@ -140,22 +128,18 @@ private fun <T> DropdownContentAnimator(
     selectedOption: T,
     onOptionSelected: (T) -> Unit
 ) {
-    // Animation Specs
     val expandDuration = 400
     val collapseDuration = 350
     
-    // Width Animation: (Dot -> Target Width)
     val widthProgress by transition.animateFloat(
         transitionSpec = {
             if (targetState) {
-                // Open: Expand Width first
                 keyframes {
                     durationMillis = expandDuration
                     0f at 0 using FastOutSlowInEasing
                     1f at 200
                 }
             } else {
-                // Close: Collapse Width last
                 keyframes {
                     durationMillis = collapseDuration
                     1f at 0
@@ -167,11 +151,9 @@ private fun <T> DropdownContentAnimator(
         label = "widthProgress"
     ) { if (it) 1f else 0f }
 
-    // Height Animation: (Dot -> Target Height)
     val heightProgress by transition.animateFloat(
         transitionSpec = {
             if (targetState) {
-                // Open: Expand Height second
                 keyframes {
                     durationMillis = expandDuration
                     0f at 0
@@ -179,7 +161,6 @@ private fun <T> DropdownContentAnimator(
                     1f at expandDuration using FastOutSlowInEasing
                 }
             } else {
-                // Close: Collapse Height first
                 keyframes {
                     durationMillis = collapseDuration
                     1f at 0
@@ -198,7 +179,6 @@ private fun <T> DropdownContentAnimator(
     SubcomposeLayout(
         modifier = Modifier.padding(top = 8.dp)
     ) { constraints ->
-        // 1. Measure content
         val contentPlaceable = subcompose("content") {
             Box(Modifier.width(IntrinsicSize.Max)) {
                 Column {
@@ -217,14 +197,11 @@ private fun <T> DropdownContentAnimator(
         val targetWidth = contentPlaceable.width.toFloat()
         val targetHeight = contentPlaceable.height.coerceAtMost(280.dp.roundToPx()).toFloat()
         
-        // Initial dot size
         val startSize = 40.dp.toPx()
 
-        // Interpolate Dimensions
         val currentWidth = startSize + (targetWidth - startSize) * widthProgress
         val currentHeight = startSize + (targetHeight - startSize) * heightProgress
         
-        // 2. Measure animated container
         val animatedPlaceable = subcompose("container") {
             Box(
                 modifier = Modifier
