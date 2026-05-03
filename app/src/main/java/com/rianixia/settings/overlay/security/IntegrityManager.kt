@@ -21,7 +21,7 @@ object IntegrityManager {
 
         // Safety check: If the user hasn't configured the Release hash yet, log it but don't crash loop.
         if (expectedSignature.contains("PLACEHOLDER_HASH")) {
-            Log.e("IntegrityCheck", "⚠️ SECURITY CONFIGURATION MISSING: Release hash not set in build.gradle")
+            Log.e("IntegrityCheck", "SECURITY CONFIGURATION MISSING: Release hash not set in build.gradle")
             Log.e("IntegrityCheck", "Detected Release Signature: $currentSignature")
             return false // Fail secure: Refuse to run if hash is missing
         }
@@ -29,7 +29,7 @@ object IntegrityManager {
         val isMatch = currentSignature.equals(expectedSignature, ignoreCase = true)
 
         if (!isMatch) {
-            Log.e("IntegrityCheck", "⛔ SECURITY VIOLATION")
+            Log.e("IntegrityCheck", "SECURITY VIOLATION")
             Log.e("IntegrityCheck", "Expected (Gradle): $expectedSignature")
             Log.e("IntegrityCheck", "Actual (Device):   $currentSignature")
         }
@@ -44,7 +44,6 @@ object IntegrityManager {
             
             val signatures = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
                 val info = packageManager.getPackageInfo(packageName, PackageManager.GET_SIGNING_CERTIFICATES)
-                // [FIX] Added safe call operator (?.) because signingInfo can be null
                 info.signingInfo?.apkContentsSigners
             } else {
                 @Suppress("DEPRECATION")

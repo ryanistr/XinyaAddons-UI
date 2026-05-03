@@ -42,17 +42,13 @@ data class AZenithState(
 )
 
 class AZenithViewModel(application: Application) : AndroidViewModel(application) {
-
     private val _uiState = MutableStateFlow(AZenithState())
     val uiState: StateFlow<AZenithState> = _uiState.asStateFlow()
 
-    // Props
     private val PROP_GLOBAL = "persist.sys.rianixia.azenith.global"
     private val PROP_CPU = "persist.sys.rianixia.azenith.cpu"
     private val PROP_DND = "persist.sys.rianixia.azenith.dnd"
     private val PROP_MEM = "persist.sys.rianixia.azenith.mem"
-    private val PROP_NOTIFY = "persist.sys.rianixia.azenith.notify"
-
     private val gameListFile = File(application.filesDir, "gamelist.txt")
 
     init {
@@ -75,12 +71,10 @@ class AZenithViewModel(application: Application) : AndroidViewModel(application)
                 ) 
             }
             
-            // Sync Service State
             if (global) {
                 startMonitoringService()
             }
 
-            // Load Apps on IO thread
             val appList = withContext(Dispatchers.IO) {
                 loadInstalledApps()
             }
@@ -93,7 +87,6 @@ class AZenithViewModel(application: Application) : AndroidViewModel(application)
 
     private fun loadInstalledApps(): List<AppItem> {
         val pm = getApplication<Application>().packageManager
-        // Read enabled list from file
         val enabledPackages = if (gameListFile.exists()) {
             gameListFile.readLines().map { it.trim() }.toSet()
         } else {
@@ -103,14 +96,12 @@ class AZenithViewModel(application: Application) : AndroidViewModel(application)
         val installed = pm.getInstalledApplications(PackageManager.GET_META_DATA)
         
         return installed.filter { appInfo ->
-            // Filter out system apps, keep only user apps
             (appInfo.flags and ApplicationInfo.FLAG_SYSTEM) == 0
         }.map { appInfo ->
             val label = pm.getApplicationLabel(appInfo).toString()
             val pkg = appInfo.packageName
             val icon = pm.getApplicationIcon(appInfo).toBitmap().asImageBitmap()
             val enabled = enabledPackages.contains(pkg)
-
             AppItem(label, pkg, icon, enabled)
         }.sortedBy { it.label }
     }
@@ -167,7 +158,6 @@ class AZenithViewModel(application: Application) : AndroidViewModel(application)
 
     fun toggleApp(packageName: String, enabled: Boolean) {
         viewModelScope.launch(Dispatchers.IO) {
-            // Update local state first for responsiveness
             _uiState.update { state ->
                 val updatedApps = state.apps.map { app ->
                     if (app.packageName == packageName) {
@@ -179,7 +169,6 @@ class AZenithViewModel(application: Application) : AndroidViewModel(application)
                 state.copy(apps = updatedApps)
             }
 
-            // Update File
             val currentList = if (gameListFile.exists()) {
                 gameListFile.readLines().map { it.trim() }.toMutableSet()
             } else {
@@ -194,8 +183,6 @@ class AZenithViewModel(application: Application) : AndroidViewModel(application)
 
             try {
                 gameListFile.writeText(currentList.joinToString("\n"))
-                // Trigger notification prop
-                setSystemProperty(PROP_NOTIFY, "1")
             } catch (e: Exception) {
                 e.printStackTrace()
             }
@@ -216,7 +203,6 @@ class AZenithViewModel(application: Application) : AndroidViewModel(application)
         } catch (e: Exception) { e.printStackTrace() }
     }
 
-    // Helper to convert Drawable to Bitmap for Compose
     private fun Drawable.toBitmap(): Bitmap {
         if (this is BitmapDrawable) return this.bitmap
         
