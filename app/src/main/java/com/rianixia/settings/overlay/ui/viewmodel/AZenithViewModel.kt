@@ -50,7 +50,32 @@ class AZenithViewModel(application: Application) : AndroidViewModel(application)
     private val gameListFile = File(application.filesDir, "gamelist.txt")
 
     init {
+        ensureGamelistFileExists()
         loadState()
+    }
+
+    private fun ensureGamelistFileExists() {
+        if (!gameListFile.exists()) {
+            copyAssetToInternal()
+        }
+    }
+
+    private fun copyAssetToInternal() {
+        try {
+            val assetManager = getApplication<Application>().assets
+            val assets = assetManager.list("")
+            if (assets?.contains("gamelist.txt") == true) {
+                assetManager.open("gamelist.txt").use { input ->
+                    gameListFile.outputStream().use { output ->
+                        input.copyTo(output)
+                    }
+                }
+            } else {
+                gameListFile.writeText("")
+            }
+        } catch (e: Exception) {
+            if(!gameListFile.exists()) gameListFile.writeText("")
+        }
     }
 
     private fun loadState() {
