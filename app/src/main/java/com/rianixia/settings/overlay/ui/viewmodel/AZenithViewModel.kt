@@ -1,19 +1,17 @@
+// File: app/src/main/java/com/rianixia/settings/overlay/ui/viewmodel/AZenithViewModel.kt
 package com.rianixia.settings.overlay.ui.viewmodel
 
 import android.app.Application
-import android.content.Intent
 import android.content.pm.ApplicationInfo
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
-import android.os.Build
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
-import com.rianixia.settings.overlay.services.AZenithService
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -70,10 +68,6 @@ class AZenithViewModel(application: Application) : AndroidViewModel(application)
                     isMemCleanEnabled = mem
                 ) 
             }
-            
-            if (global) {
-                startMonitoringService()
-            }
 
             val appList = withContext(Dispatchers.IO) {
                 loadInstalledApps()
@@ -110,29 +104,7 @@ class AZenithViewModel(application: Application) : AndroidViewModel(application)
         viewModelScope.launch(Dispatchers.IO) {
             setSystemProperty(PROP_GLOBAL, if (enabled) "1" else "0")
             _uiState.update { it.copy(isGlobalEnabled = enabled) }
-            
-            if (enabled) {
-                startMonitoringService()
-            } else {
-                stopMonitoringService()
-            }
         }
-    }
-    
-    private fun startMonitoringService() {
-        val context = getApplication<Application>()
-        val intent = Intent(context, AZenithService::class.java)
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            context.startForegroundService(intent)
-        } else {
-            context.startService(intent)
-        }
-    }
-
-    private fun stopMonitoringService() {
-        val context = getApplication<Application>()
-        val intent = Intent(context, AZenithService::class.java)
-        context.stopService(intent)
     }
 
     fun setCpuLimit(limit: Float) {
