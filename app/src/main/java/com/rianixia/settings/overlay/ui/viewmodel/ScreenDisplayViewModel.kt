@@ -59,7 +59,6 @@ class ScreenDisplayViewModel(application: Application) : AndroidViewModel(applic
         fetchCurrentResolution()
     }
 
-    // --- Native Property Reflection ---
     private fun setSystemProperty(key: String, value: String) {
         Log.d(TAG, "setSystemProperty: Requesting write -> [$key] = [$value]")
         try {
@@ -87,7 +86,7 @@ class ScreenDisplayViewModel(application: Application) : AndroidViewModel(applic
         }
     }
 
-    private fun fetchDisplayStates() {
+    fun fetchDisplayStates() {
         Log.d(TAG, "fetchDisplayStates: Starting state fetch")
         viewModelScope.launch(Dispatchers.IO) {
             val vSyncState = getSystemProperty("persist.sys.rianixia.display.vsync", "-1")
@@ -146,7 +145,7 @@ class ScreenDisplayViewModel(application: Application) : AndroidViewModel(applic
         
         viewModelScope.launch(Dispatchers.IO) {
             setSystemProperty("persist.sys.rianixia.res.target", newRes)
-            delay(1000) // Allow daemon to apply
+            delay(1000)
             
             fetchCurrentResolution()
             
@@ -189,7 +188,6 @@ class ScreenDisplayViewModel(application: Application) : AndroidViewModel(applic
         }
     }
 
-    // Still required for AppOps execution, as AppOps isn't tied to System Properties
     private fun runShellCommand(command: String): String {
         Log.d(TAG, "runShellCommand: Executing -> $command")
         return try {

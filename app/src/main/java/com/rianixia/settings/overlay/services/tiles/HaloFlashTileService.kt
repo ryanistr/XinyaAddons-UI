@@ -1,11 +1,10 @@
-package com.rianixia.settings.overlay.services
+package com.rianixia.settings.overlay.services.tiles
 
 import android.service.quicksettings.Tile
 import android.service.quicksettings.TileService
 
 class HaloFlashTileService : TileService() {
-    private val animProp = "persist.sys.rianixia.halolight.anim"
-    private val powerProp = "persist.sys.rianixia.halolight.power"
+    private val flashProp = "persist.sys.rianixia.halolight.flash"
 
     override fun onStartListening() {
         super.onStartListening()
@@ -14,25 +13,23 @@ class HaloFlashTileService : TileService() {
 
     override fun onClick() {
         super.onClick()
-        val currentAnim = getSystemProperty(animProp)
+        val currentFlash = getSystemProperty(flashProp)
         
-        if (currentAnim == "Static" && getSystemProperty(powerProp) == "100") {
-            setSystemProperty(animProp, "off")
+        if (currentFlash == "1" || currentFlash.equals("true", ignoreCase = true)) {
+            setSystemProperty(flashProp, "0")
         } else {
-            setSystemProperty(animProp, "Static")
-            setSystemProperty(powerProp, "100")
+            setSystemProperty(flashProp, "1")
         }
         updateTileState()
     }
 
     private fun updateTileState() {
         val tile = qsTile ?: return
-        val currentAnim = getSystemProperty(animProp)
-        val currentPower = getSystemProperty(powerProp)
+        val currentFlash = getSystemProperty(flashProp)
 
-        if (currentAnim == "Static" && currentPower == "100") {
+        if (currentFlash == "1" || currentFlash.equals("true", ignoreCase = true)) {
             tile.state = Tile.STATE_ACTIVE
-            tile.subtitle = "Max Flash"
+            tile.subtitle = "Active"
         } else {
             tile.state = Tile.STATE_INACTIVE
             tile.subtitle = "Off"

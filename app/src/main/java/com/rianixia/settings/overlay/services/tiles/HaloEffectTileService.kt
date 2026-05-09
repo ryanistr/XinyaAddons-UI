@@ -1,4 +1,4 @@
-package com.rianixia.settings.overlay.services
+package com.rianixia.settings.overlay.services.tiles
 
 import android.content.Context
 import android.service.quicksettings.Tile
@@ -20,13 +20,10 @@ class HaloEffectTileService : TileService() {
         val prefs = getSharedPreferences(prefsName, Context.MODE_PRIVATE)
         val targetEffect = prefs.getString(cachedEffectKey, "FlowingLight") ?: "FlowingLight"
 
-        if (currentAnim == "off" || currentAnim == "") {
+        if (currentAnim == "off" || currentAnim == "" || currentAnim == "0") {
             setSystemProperty(animProp, targetEffect)
         } else {
-            // Save current effect before turning off, unless it's the static flash override
-            if (currentAnim != "Static") {
-                prefs.edit().putString(cachedEffectKey, currentAnim).apply()
-            }
+            prefs.edit().putString(cachedEffectKey, currentAnim).apply()
             setSystemProperty(animProp, "off")
         }
         updateTileState()
@@ -36,7 +33,7 @@ class HaloEffectTileService : TileService() {
         val tile = qsTile ?: return
         val currentAnim = getSystemProperty(animProp)
 
-        if (currentAnim != "off" && currentAnim != "") {
+        if (currentAnim != "off" && currentAnim != "" && currentAnim != "0") {
             tile.state = Tile.STATE_ACTIVE
             tile.subtitle = currentAnim
         } else {

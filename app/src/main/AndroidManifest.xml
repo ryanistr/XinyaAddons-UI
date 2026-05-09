@@ -17,7 +17,7 @@
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
     <uses-permission android:name="android.permission.INTERNAL_SYSTEM_WINDOW" />
     <uses-permission android:name="android.permission.INTERNET"/>
-    
+
     <application android:allowBackup="true" android:label="Xinya Toolkit" android:icon="@mipmap/ic_launcher" android:theme="@style/Theme.Rianixia" android:enableOnBackInvokedCallback="true">
         <activity android:name=".MainActivity" android:exported="true" android:label="Xinya Toolkit" android:icon="@mipmap/ic_launcher">
             <intent-filter>
@@ -64,94 +64,77 @@
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
-        <service android:name=".services.tiles.OpenAppTileService" android:exported="true" android:icon="@mipmap/ic_launcher" android:label="Xinya Menu" android:permission="android.permission.BIND_QUICK_SETTINGS_TILE">
+        <service android:name=".services.tiles.BypassChargingTileService" android:label="Bypass Charge" android:icon="@drawable/ic_qs_bypass" android:permission="android.permission.BIND_QUICK_SETTINGS_TILE" android:exported="true">
+            <intent-filter>
+                <action android:name="android.service.quicksettings.action.QS_TILE" />
+            </intent-filter>
+
+        </service>
+        <service android:name=".services.tiles.FlagSecureTileService" android:label="FlagSecure" android:icon="@drawable/ic_qs_secure" android:permission="android.permission.BIND_QUICK_SETTINGS_TILE" android:exported="true">
+            <intent-filter>
+                <action android:name="android.service.quicksettings.action.QS_TILE" />
+            </intent-filter>
+
+        </service>
+        <service android:name=".services.tiles.ThermalProfileTileService" android:label="Thermal Profile" android:icon="@drawable/ic_qs_thermal" android:permission="android.permission.BIND_QUICK_SETTINGS_TILE" android:exported="true">
+            <intent-filter>
+                <action android:name="android.service.quicksettings.action.QS_TILE" />
+            </intent-filter>
+
+        </service>
+        <service android:name=".services.tiles.HideRotationTileService" android:label="Hide Corner Rotation" android:icon="@drawable/ic_qs_rotation" android:permission="android.permission.BIND_QUICK_SETTINGS_TILE" android:exported="true">
+            <intent-filter>
+                <action android:name="android.service.quicksettings.action.QS_TILE" />
+            </intent-filter>
+
+        </service>
+        <service android:name=".services.tiles.ExtraDimTileService" android:label="Extra Dim" android:icon="@drawable/ic_qs_extradim" android:permission="android.permission.BIND_QUICK_SETTINGS_TILE" android:exported="true">
             <intent-filter>
                 <action android:name="android.service.quicksettings.action.QS_TILE" />
             </intent-filter>
         </service>
-        <service android:name=".services.BypassChargingTileService" android:label="Bypass Charge" android:icon="@drawable/ic_qs_bypass" android:permission="android.permission.BIND_QUICK_SETTINGS_TILE" android:exported="true">
+        <service android:name=".services.tiles.VSyncTileService" android:label="VSync Lock" android:icon="@drawable/ic_qs_vsync" android:permission="android.permission.BIND_QUICK_SETTINGS_TILE" android:exported="true">
             <intent-filter>
                 <action android:name="android.service.quicksettings.action.QS_TILE" />
             </intent-filter>
-            <meta-data android:name="android.service.quicksettings.ACTIVE_TILE" android:value="true" />
+
         </service>
-        <service android:name=".services.FlagSecureTileService" android:label="FlagSecure" android:icon="@drawable/ic_qs_secure" android:permission="android.permission.BIND_QUICK_SETTINGS_TILE" android:exported="true">
+        <service android:name=".services.tiles.HaloFlashTileService" android:label="Halo Flash" android:icon="@drawable/ic_qs_haloflash" android:permission="android.permission.BIND_QUICK_SETTINGS_TILE" android:exported="true">
             <intent-filter>
                 <action android:name="android.service.quicksettings.action.QS_TILE" />
             </intent-filter>
-            <meta-data android:name="android.service.quicksettings.ACTIVE_TILE" android:value="true" />
-        </service>
-        <service android:name=".services.ThermalProfileTileService" android:label="Thermal Profile" android:icon="@drawable/ic_qs_thermal" android:permission="android.permission.BIND_QUICK_SETTINGS_TILE" android:exported="true">
-            <intent-filter>
-                <action android:name="android.service.quicksettings.action.QS_TILE" />
-            </intent-filter>
-            <meta-data android:name="android.service.quicksettings.ACTIVE_TILE" android:value="true" />
-        </service>
-        <service android:name=".services.HideRotationTileService" android:label="Hide Corner Rotation" android:icon="@drawable/ic_qs_rotation" android:permission="android.permission.BIND_QUICK_SETTINGS_TILE" android:exported="true">
-            <intent-filter>
-                <action android:name="android.service.quicksettings.action.QS_TILE" />
-            </intent-filter>
-            <meta-data android:name="android.service.quicksettings.ACTIVE_TILE" android:value="true" />
-        </service>
-        <service android:name=".services.ExtraDimTileService" android:label="Extra Dim" android:icon="@drawable/ic_qs_extradim" android:permission="android.permission.BIND_QUICK_SETTINGS_TILE" android:exported="true">
-            <intent-filter>
-                <action android:name="android.service.quicksettings.action.QS_TILE" />
-            </intent-filter>
-        </service>
-        <service android:name=".services.VSyncTileService" android:label="VSync Lock" android:icon="@drawable/ic_qs_vsync" android:permission="android.permission.BIND_QUICK_SETTINGS_TILE" android:exported="true">
-            <intent-filter>
-                <action android:name="android.service.quicksettings.action.QS_TILE" />
-            </intent-filter>
-            <meta-data android:name="android.service.quicksettings.ACTIVE_TILE" android:value="true" />
-        </service>
-        <service android:name=".services.HaloFlashTileService" android:label="Halo Flash" android:icon="@drawable/ic_qs_haloflash" android:permission="android.permission.BIND_QUICK_SETTINGS_TILE" android:exported="true">
-            <intent-filter>
-                <action android:name="android.service.quicksettings.action.QS_TILE" />
-            </intent-filter>
-            <meta-data android:name="android.service.quicksettings.ACTIVE_TILE" android:value="true" />
+
         </service>
 
-        <service android:name=".services.HaloEffectTileService" android:label="Halo Effect" android:icon="@drawable/ic_qs_halo" android:permission="android.permission.BIND_QUICK_SETTINGS_TILE" android:exported="true">
+        <service android:name=".services.tiles.HaloEffectTileService" android:label="Halo Effect" android:icon="@drawable/ic_qs_halo" android:permission="android.permission.BIND_QUICK_SETTINGS_TILE" android:exported="true">
             <intent-filter>
                 <action android:name="android.service.quicksettings.action.QS_TILE" />
             </intent-filter>
-            <meta-data android:name="android.service.quicksettings.ACTIVE_TILE" android:value="true" />
+
         </service>
-        <service android:name=".services.AutoCutTileService" android:label="Auto Cut" android:icon="@drawable/ic_qs_autocut" android:permission="android.permission.BIND_QUICK_SETTINGS_TILE" android:exported="true">
+        <service android:name=".services.tiles.AutoCutTileService" android:label="Auto Cut" android:icon="@drawable/ic_qs_autocut" android:permission="android.permission.BIND_QUICK_SETTINGS_TILE" android:exported="true">
             <intent-filter>
                 <action android:name="android.service.quicksettings.action.QS_TILE" />
             </intent-filter>
-            <meta-data android:name="android.service.quicksettings.ACTIVE_TILE" android:value="true" />
+
         </service>
-        <service android:name=".services.ThermalCutoffTileService" android:label="Thermal Cutoff" android:icon="@drawable/ic_qs_thermcutoff" android:permission="android.permission.BIND_QUICK_SETTINGS_TILE" android:exported="true">
+        <service android:name=".services.tiles.ThermalCutoffTileService" android:label="Thermal Cutoff" android:icon="@drawable/ic_qs_thermcutoff" android:permission="android.permission.BIND_QUICK_SETTINGS_TILE" android:exported="true">
             <intent-filter>
                 <action android:name="android.service.quicksettings.action.QS_TILE" />
             </intent-filter>
-            <meta-data android:name="android.service.quicksettings.ACTIVE_TILE" android:value="true" />
+
         </service>
-        <service android:name=".services.EnforceDozeTileService" android:label="Enforce Doze" android:icon="@drawable/ic_qs_doze" android:permission="android.permission.BIND_QUICK_SETTINGS_TILE" android:exported="true">
+        <service android:name=".services.tiles.EnforceDozeTileService" android:label="Enforce Doze" android:icon="@drawable/ic_qs_doze" android:permission="android.permission.BIND_QUICK_SETTINGS_TILE" android:exported="true">
             <intent-filter>
                 <action android:name="android.service.quicksettings.action.QS_TILE" />
             </intent-filter>
-            <meta-data android:name="android.service.quicksettings.ACTIVE_TILE" android:value="true" />
+
         </service>
-        <service android:name=".services.AZenithTileService" android:label="AZenith Engine" android:icon="@drawable/ic_qs_azenith" android:permission="android.permission.BIND_QUICK_SETTINGS_TILE" android:exported="true">
+        <service android:name=".services.tiles.CpuGovernorTileService" android:label="CPU Governor" android:icon="@drawable/ic_qs_cpugov" android:permission="android.permission.BIND_QUICK_SETTINGS_TILE" android:exported="true">
             <intent-filter>
                 <action android:name="android.service.quicksettings.action.QS_TILE" />
             </intent-filter>
-            <meta-data android:name="android.service.quicksettings.ACTIVE_TILE" android:value="true" />
-        </service>
-        <service android:name=".services.CpuGovernorTileService" android:label="CPU Governor" android:icon="@drawable/ic_qs_cpugov" android:permission="android.permission.BIND_QUICK_SETTINGS_TILE" android:exported="true">
-            <intent-filter>
-                <action android:name="android.service.quicksettings.action.QS_TILE" />
-            </intent-filter>
-            <meta-data android:name="android.service.quicksettings.ACTIVE_TILE" android:value="true" />
-        </service>
-        <service android:name=".services.XinyaMenuTileService" android:label="Xinya Menu" android:icon="@mipmap/ic_launcher_foreground" android:permission="android.permission.BIND_QUICK_SETTINGS_TILE" android:exported="true">
-            <intent-filter>
-                <action android:name="android.service.quicksettings.action.QS_TILE" />
-            </intent-filter>
-            <meta-data android:name="android.service.quicksettings.ACTIVE_TILE" android:value="false" />
+
         </service>
         <receiver android:name=".OverlayService" android:exported="true">
             <intent-filter>

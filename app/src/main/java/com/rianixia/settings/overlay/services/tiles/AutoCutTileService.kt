@@ -1,4 +1,4 @@
-package com.rianixia.settings.overlay.services
+package com.rianixia.settings.overlay.services.tiles
 
 import android.service.quicksettings.Tile
 import android.service.quicksettings.TileService

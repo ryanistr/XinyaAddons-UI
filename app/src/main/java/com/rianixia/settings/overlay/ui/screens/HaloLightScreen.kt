@@ -1,5 +1,6 @@
 package com.rianixia.settings.overlay.ui.screens
 
+import android.content.Context
 import androidx.compose.animation.*
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.background
@@ -14,6 +15,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Lightbulb
 import androidx.compose.material.icons.rounded.PowerSettingsNew
+import androidx.compose.material.icons.rounded.Science
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -26,10 +28,13 @@ import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.*
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.drawscope.rotate
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.DialogProperties
 import androidx.navigation.NavController
 import com.rianixia.settings.overlay.ui.components.*
 import com.rianixia.settings.overlay.ui.viewmodel.HaloLightViewModel
@@ -62,7 +67,8 @@ private val effectMetas = listOf(
     EffectMeta("Charging",           "Charging",        effectPalette[3]),
     EffectMeta("Breathing",          "Breathing",       effectPalette[0]),
     EffectMeta("Meteor",             "Meteor",          effectPalette[4]),
-    EffectMeta("Flow",               "Flow",            effectPalette[1])
+    EffectMeta("Flow",               "Flow",            effectPalette[1]),
+    EffectMeta("Startup2",           "Startup",         effectPalette[3])
 )
 
 @Composable
@@ -316,7 +322,7 @@ private fun HaloRingPreview(
                     }
                 }
 
-                "Startup1", "Startup2" -> {
+                "Startup2" -> {
                     val expandProgress = chargeFill
                     val r = radius * (0.2f + expandProgress * 0.8f)
                     val a = (1f - expandProgress) * effectiveAlpha
@@ -375,10 +381,50 @@ fun HaloLightScreen(
     navController: NavController,
     viewModel: HaloLightViewModel
 ) {
+    val context = LocalContext.current
+    val uriHandler = LocalUriHandler.current
+    val prefs = context.getSharedPreferences("xinya_app_prefs", Context.MODE_PRIVATE)
+    var showExperimentalDialog by remember { mutableStateOf(!prefs.getBoolean("halo_warning_shown", false)) }
+
     val isEnabled by viewModel.isHaloEnabled.collectAsState()
     val activeEffect by viewModel.activeEffect.collectAsState()
     val brightness by viewModel.brightness.collectAsState()
     val hazeState = remember { HazeState() }
+
+    if (showExperimentalDialog) {
+        AlertDialog(
+            onDismissRequest = { },
+            icon = { Icon(Icons.Rounded.Science, null, tint = MaterialTheme.colorScheme.primary) },
+            title = { Text("Experimental Feature", fontWeight = FontWeight.Bold) },
+            text = {
+                Text(
+                    "Everything on this page is experimental and might have some slight issues, but don't worry, a simple reboot should be enough to fix it.\n\nThe halolight is currently under development. If you'd like to contribute, please consider donating.",
+                    style = MaterialTheme.typography.bodyMedium
+                )
+            },
+            confirmButton = {
+                Column(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    TextButton(onClick = { uriHandler.openUri("https://t.me/xiaallkay/6") }) {
+                        Text("Donate", color = MaterialTheme.colorScheme.tertiary, fontWeight = FontWeight.Bold)
+                    }
+                    Button(
+                        onClick = {
+                            prefs.edit().putBoolean("halo_warning_shown", true).apply()
+                            showExperimentalDialog = false
+                        },
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Text("Understood", fontWeight = FontWeight.Bold)
+                    }
+                }
+            },
+            containerColor = MaterialTheme.colorScheme.surface,
+            properties = DialogProperties(dismissOnBackPress = false, dismissOnClickOutside = false)
+        )
+    }
 
     MaterialGlassScaffold {
         Box(Modifier.fillMaxSize()) {
@@ -475,13 +521,6 @@ fun HaloLightScreen(
                                                 meta = meta,
                                                 isSelected = activeEffect == meta.key,
                                                 onClick = { viewModel.setEffect(meta.key) },
-                                                enabled = isEnabled
-                                            )
-                                        }
-                                        item {
-                                            StartupDropdownButton(
-                                                currentEffect = activeEffect,
-                                                onEffectSelected = { viewModel.setEffect(it) },
                                                 enabled = isEnabled
                                             )
                                         }
@@ -692,94 +731,5 @@ private fun GradientBrightnessSlider(
                 inactiveTrackColor = colorScheme.surfaceVariant.copy(alpha = 0.5f)
             )
         )
-    }
-}
-
-@Composable
-fun StartupDropdownButton(
-    currentEffect: String,
-    onEffectSelected: (String) -> Unit,
-    enabled: Boolean
-) {
-    var expanded by remember { mutableStateOf(false) }
-    val isStartupActive = currentEffect == "Startup1" || currentEffect == "Startup2"
-    val accentColor = effectPalette[3] 
-    val colorScheme = MaterialTheme.colorScheme
-
-    Box(modifier = Modifier.fillMaxWidth()) {
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(80.dp)
-                .then(
-                    if (isStartupActive && enabled) Modifier.drawBehind {
-                        drawRoundRect(
-                            color = accentColor.copy(alpha = 0.35f),
-                            cornerRadius = androidx.compose.ui.geometry.CornerRadius(18.dp.toPx()),
-                            style = Stroke(width = 8.dp.toPx())
-                        )
-                    } else Modifier
-                )
-                .clip(RoundedCornerShape(16.dp))
-                .background(
-                    if (isStartupActive && enabled)
-                        Brush.linearGradient(listOf(accentColor.copy(0.25f), accentColor.copy(0.10f)))
-                    else
-                        Brush.linearGradient(listOf(colorScheme.surfaceVariant.copy(0.6f), colorScheme.surfaceVariant.copy(0.3f)))
-                )
-                .border(
-                    width = if (isStartupActive && enabled) 1.5.dp else 0.8.dp,
-                    color = if (isStartupActive && enabled) accentColor.copy(0.5f)
-                            else colorScheme.outlineVariant.copy(0.2f),
-                    shape = RoundedCornerShape(16.dp)
-                )
-                .clickable(
-                    enabled = enabled,
-                    onClick = { expanded = true }
-                ),
-            contentAlignment = Alignment.Center
-        ) {
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center,
-                modifier = Modifier.fillMaxSize()
-            ) {
-                Box(
-                    modifier = Modifier
-                        .size(6.dp)
-                        .clip(CircleShape)
-                        .background(
-                            if (isStartupActive && enabled) accentColor
-                            else colorScheme.onSurfaceVariant.copy(0.3f)
-                        )
-                )
-                Spacer(Modifier.height(5.dp))
-                Text(
-                    text = "Startup",
-                    style = MaterialTheme.typography.labelSmall,
-                    fontWeight = if (isStartupActive) FontWeight.Bold else FontWeight.Normal,
-                    color = if (isStartupActive && enabled) accentColor
-                            else colorScheme.onSurfaceVariant.copy(0.7f),
-                    fontSize = 11.sp
-                )
-                if (isStartupActive) {
-                    Text(
-                        text = if (currentEffect == "Startup1") "v1" else "v2",
-                        style = MaterialTheme.typography.labelSmall,
-                        fontSize = 10.sp,
-                        color = accentColor.copy(alpha = 0.6f)
-                    )
-                }
-            }
-        }
-
-        DropdownMenu(
-            expanded = expanded,
-            onDismissRequest = { expanded = false },
-            modifier = Modifier.background(colorScheme.surface)
-        ) {
-            DropdownMenuItem(text = { Text("Version 1") }, onClick = { onEffectSelected("Startup1"); expanded = false })
-            DropdownMenuItem(text = { Text("Version 2") }, onClick = { onEffectSelected("Startup2"); expanded = false })
-        }
     }
 }

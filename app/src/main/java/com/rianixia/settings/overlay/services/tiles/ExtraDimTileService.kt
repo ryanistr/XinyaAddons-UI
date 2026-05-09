@@ -1,10 +1,11 @@
-package com.rianixia.settings.overlay.services
+package com.rianixia.settings.overlay.services.tiles
 
 import android.content.Intent
 import android.service.quicksettings.Tile
 import android.service.quicksettings.TileService
 import java.io.BufferedReader
 import java.io.InputStreamReader
+import com.rianixia.settings.overlay.services.ExtraDimService
 
 class ExtraDimTileService : TileService() {
 
