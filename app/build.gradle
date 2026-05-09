@@ -1,4 +1,3 @@
-// [CRITICAL] buildscript must be the very first block for StringFog to work
 buildscript {
     repositories {
         google()
@@ -18,7 +17,6 @@ plugins {
 
 stringfog {
     implementation = 'com.github.megatronking.stringfog.xor.StringFogImpl'
-    // [FIX] Explicitly list subpackages to exclude 'ui.viewmodel' and prevent the IoEvent crash
     fogPackages = [
         'com.rianixia.settings.overlay.data',
         'com.rianixia.settings.overlay.security',
@@ -35,7 +33,6 @@ stringfog {
 
 android {
     namespace = 'com.rianixia.settings.overlay'
-    // [FIXED] Added '=' to fix deprecation warning
     compileSdk = 35
     lint {
             checkReleaseBuilds = false
@@ -43,9 +40,7 @@ android {
         }
     defaultConfig {
         applicationId = "com.rianixia.settings.overlay"
-        // [FIXED] Added '=' to fix deprecation warning
         minSdk = 26
-        // [FIXED] Added '=' to fix deprecation warning
         targetSdk = 35
         versionCode = 1
         versionName = "1.0"
@@ -104,8 +99,6 @@ dependencies {
     implementation libs.stringfog.xor
     implementation 'androidx.core:core-ktx:1.12.0'
     implementation libs.stringfog.interface
-    
-    // Glassmorphism
     implementation libs.haze
     implementation libs.haze.materials
 

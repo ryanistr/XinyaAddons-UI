@@ -21,12 +21,19 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
     private val aggregator = SystemStateAggregator(application)
     
     private val _totalUndervoltSteps = MutableStateFlow(0)
+    private val _dynamicGovernor = MutableStateFlow("schedutil")
 
     val uiState: StateFlow<HomeDashboardState> = combine(
         aggregator.state,
-        _totalUndervoltSteps
-    ) { state, totalSteps ->
-        state.copy(totalUndervoltValue = totalSteps)
+        _totalUndervoltSteps,
+        _dynamicGovernor
+    ) { state, totalSteps, governor ->
+        state.copy(
+            totalUndervoltValue = totalSteps,
+            cpuState = state.cpuState.copy(
+                activeGovernor = governor.ifEmpty { state.cpuState.activeGovernor }
+            )
+        )
     }.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(5000),
@@ -35,6 +42,14 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
 
     init {
         startUndervoltPolling()
+        refreshData()
+    }
+
+    fun refreshData() {
+        viewModelScope.launch(Dispatchers.IO) {
+            val gov = readPropAsString("persist.sys.rianixia.cpu.gov", "schedutil")
+            _dynamicGovernor.value = gov
+        }
     }
 
     private fun startUndervoltPolling() {
@@ -56,6 +71,18 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
                 _totalUndervoltSteps.value = sum
                 delay(2000) // 2-second polling interval
             }
+        }
+    }
+
+    private fun readPropAsString(key: String, default: String = ""): String {
+        return try {
+            val process = Runtime.getRuntime().exec("getprop $key")
+            val reader = BufferedReader(InputStreamReader(process.inputStream))
+            val line = reader.readLine()
+            reader.close()
+            line?.trim()?.ifEmpty { default } ?: default
+        } catch (e: Exception) {
+            default
         }
     }
 

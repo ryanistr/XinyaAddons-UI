@@ -44,7 +44,7 @@ class CPUViewModel : ViewModel() {
         loadData()
     }
 
-    private fun loadData() {
+    fun loadData() {
         viewModelScope.launch {
             val clusters = CPURepository.getClusters()
             val globalGovs = CPURepository.getGlobalAvailableGovernors()
@@ -55,7 +55,6 @@ class CPUViewModel : ViewModel() {
             val scale = CPURepository.getProp(CPURepository.Props.GLOBAL_SCALE, "100").toFloatOrNull() ?: 100f
 
             val clusterStates = clusters.map { cluster ->
-                // Ensure Min is at least Hardware Min
                 val safeMinDefault = cluster.availableFreqs.filter { it >= cluster.systemMinFreq }.firstOrNull() ?: cluster.systemMinFreq
                 val safeMaxDefault = cluster.availableFreqs.lastOrNull() ?: safeMinDefault
 
@@ -63,7 +62,6 @@ class CPUViewModel : ViewModel() {
                 var storedMax = CPURepository.getProp(CPURepository.Props.clusterMax(cluster.id), safeMaxDefault.toString()).toInt()
                 val storedGov = CPURepository.getProp(CPURepository.Props.clusterGov(cluster.id), cluster.availableGovs.firstOrNull() ?: "schedutil")
 
-                // Enforce Constraints on Load
                 if (storedMin < cluster.systemMinFreq) storedMin = cluster.systemMinFreq
                 if (storedMax < storedMin) storedMax = storedMin
 
@@ -179,15 +177,12 @@ class CPUViewModel : ViewModel() {
 
                     if (isMax) {
                         newMax = freq
-                        // Ensure Min is not > Max
                         if (newMin > newMax) newMin = newMax
                     } else {
                         newMin = freq
-                        // Ensure Max is not < Min
                         if (newMax < newMin) newMax = newMin
                     }
 
-                    // Recalculate valid options
                     val validMinOptions = cluster.availableFreqs.filter { f -> f >= cluster.systemMinFreq && f <= newMax }
                     val validMaxOptions = cluster.availableFreqs.filter { f -> f >= newMin }
 

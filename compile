@@ -1,1 +1,5 @@
+#!/bin/bash
+export JAVA_HOME=/usr/lib/jvm/java-21-openjdk
+export ANDROID_NDK_HOME=/home/ryanistr/android-ndk-r27c
+
 ./gradlew clean assembleRelease

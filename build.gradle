@@ -1,11 +1,9 @@
-// [FIX] Add buildscript block to provide the encryption library to the plugin
 buildscript {
     repositories {
         google()
         mavenCentral()
     }
     dependencies {
-        // The plugin needs this class available in its classpath to perform encryption
         classpath libs.stringfog.xor
     }
 }

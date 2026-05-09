@@ -6,7 +6,8 @@ import java.io.BufferedReader
 import java.io.InputStreamReader
 
 class CpuGovernorTileService : TileService() {
-    private val propKey = "persist.sys.rianixia.cpu.global_gov"
+    // CORRECTED PROPERTY KEY to match CPURepository
+    private val propKey = "persist.sys.rianixia.cpu.gov"
 
     override fun onStartListening() {
         super.onStartListening()
