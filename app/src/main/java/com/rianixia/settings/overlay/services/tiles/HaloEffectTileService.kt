@@ -3,6 +3,7 @@ package com.rianixia.settings.overlay.services.tiles
 import android.content.Context
 import android.service.quicksettings.Tile
 import android.service.quicksettings.TileService
+import com.rianixia.settings.overlay.R
 
 class HaloEffectTileService : TileService() {
     private val animProp = "persist.sys.rianixia.halolight.anim"
@@ -38,7 +39,7 @@ class HaloEffectTileService : TileService() {
             tile.subtitle = currentAnim
         } else {
             tile.state = Tile.STATE_INACTIVE
-            tile.subtitle = "Off"
+            tile.subtitle = getString(R.string.tile_off)
         }
         tile.updateTile()
     }

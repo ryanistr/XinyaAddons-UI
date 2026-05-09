@@ -2,6 +2,7 @@ package com.rianixia.settings.overlay.services.tiles
 
 import android.service.quicksettings.Tile
 import android.service.quicksettings.TileService
+import com.rianixia.settings.overlay.R
 
 class HideRotationTileService : TileService() {
 
@@ -26,10 +27,10 @@ class HideRotationTileService : TileService() {
 
         if (currentState == "1") {
             tile.state = Tile.STATE_ACTIVE
-            tile.subtitle = "Hidden"
+            tile.subtitle = getString(R.string.tile_hidden)
         } else {
             tile.state = Tile.STATE_INACTIVE
-            tile.subtitle = "Visible"
+            tile.subtitle = getString(R.string.tile_visible)
         }
         tile.updateTile()
     }

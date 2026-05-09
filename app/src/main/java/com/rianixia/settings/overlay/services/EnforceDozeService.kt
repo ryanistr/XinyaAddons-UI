@@ -47,21 +47,14 @@ class EnforceDozeService : Service() {
         createNotificationChannel()
         reloadSettings()
         useRoot = ShellUtils.checkRoot()
-        // Register receiver after root check to ensure executeCommand works correctly if needed immediately
         registerScreenReceiver()
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        // FIX: Always call startForeground immediately to prevent ForegroundServiceDidNotStartInTimeException
         startForeground(NOTIFICATION_ID, buildNotification())
 
         if (intent?.action == ACTION_RELOAD_SETTINGS) {
             reloadSettings()
-            /*
-            if (!powerManager.isInteractive) {
-                scheduleDoze(dozeDelayMs)
-            }
-            */
         } else {
             if (!powerManager.isInteractive) {
                 scheduleDoze(dozeDelayMs)
@@ -76,7 +69,6 @@ class EnforceDozeService : Service() {
         serviceScope.launch(Dispatchers.IO) {
             exitDoze()
         }
-        // Give a small buffer for the exit command to run before killing scope
         try { Thread.sleep(50) } catch (e: Exception) {} 
         serviceScope.cancel()
     }
@@ -88,14 +80,12 @@ class EnforceDozeService : Service() {
             override fun onReceive(context: Context, intent: Intent) {
                 when (intent.action) {
                     Intent.ACTION_SCREEN_OFF -> {
-                        // Global Screen State Monitor: 0 = OFF
                         serviceScope.launch(Dispatchers.IO) {
                             executeCommand("setprop persist.sys.rianixia.screen_state 0")
                         }
                         scheduleDoze(dozeDelayMs)
                     }
                     Intent.ACTION_SCREEN_ON -> {
-                        // Global Screen State Monitor: 1 = ON
                         serviceScope.launch(Dispatchers.IO) {
                             executeCommand("setprop persist.sys.rianixia.screen_state 1")
                             exitDoze() 
@@ -132,46 +122,37 @@ class EnforceDozeService : Service() {
     private fun enterDoze() {
         Log.i(TAG, "Triggering Deep Sleep Sequence (Root: $useRoot)")
         
-        // 1. Force Doze
-        // Attempt normal command first
         val result = executeCommand("dumpsys deviceidle force-idle deep")
         if (result.contains("idle", ignoreCase = true)) {
             Log.d(TAG, "System Result: $result")
         } else {
             Log.e(TAG, "Doze Command Failed: $result")
-            // Fallback: Set prop for AIO
             Log.w(TAG, "Fallback: Setting persist.sys.rianixia.enforcedoze.doze = true")
             executeCommand("setprop persist.sys.rianixia.enforcedoze.doze true")
         }
         
-        // 2. Disable Sensors
         if (disableSensors) {
             if (useRoot) {
                 Log.d(TAG, "Action: Restricting Sensors")
                 val output = executeCommand("dumpsys sensorservice restrict")
                 Log.d(TAG, "Sensor Result: $output")
             } else {
-                // Non-root cannot use dumpsys sensorservice restrict. Use Prop Fallback.
-                // Logic Inverted: false = disabled/restricted (to match wifi/data logic requested)
                 Log.w(TAG, "Action: Restricting Sensors (via Prop Fallback)")
                 executeCommand("setprop persist.sys.rianixia.enforcedoze.sensors false")
             }
         }
 
-        // 3. Disable Data
         if (disableData) {
             Log.d(TAG, "Action: Disabling Mobile Data")
             val output = executeCommand("svc data disable")
             Log.d(TAG, "Data Result: $output")
             
-            // If output indicates failure or we are non-root (svc can be flaky without root), ensure prop is set
             if (output.contains("Error") || output.contains("Permission denial") || !useRoot) {
                 Log.w(TAG, "Fallback: Setting persist.sys.rianixia.enforcedoze.data = false")
                 executeCommand("setprop persist.sys.rianixia.enforcedoze.data false")
             }
         }
 
-        // 4. Disable WiFi
         if (disableWifi) {
             Log.d(TAG, "Action: Disabling Wi-Fi")
             val output = executeCommand("svc wifi disable")
@@ -188,27 +169,21 @@ class EnforceDozeService : Service() {
         Log.i(TAG, "Exiting Deep Sleep Sequence")
         dozeJob?.cancel()
 
-        // 1. Restore Sensors
         if (disableSensors) {
             if (useRoot) {
                 Log.d(TAG, "Action: Enabling Sensors")
                 executeCommand("dumpsys sensorservice enable")
             } else {
-                // Prop Fallback
-                // Logic Inverted: true = enabled (to match wifi/data logic requested)
                 executeCommand("setprop persist.sys.rianixia.enforcedoze.sensors true")
             }
         }
 
-        // 2. Unforce Doze
         val unforce = executeCommand("dumpsys deviceidle unforce")
         val step = executeCommand("dumpsys deviceidle step")
         Log.d(TAG, "System Result: $unforce | $step")
         
-        // Also reset Doze prop just in case AIO is watching it
         executeCommand("setprop persist.sys.rianixia.enforcedoze.doze false")
         
-        // 3. Restore Data
         if (disableData) {
             Log.d(TAG, "Action: Enabling Mobile Data")
             val output = executeCommand("svc data enable")
@@ -218,7 +193,6 @@ class EnforceDozeService : Service() {
             }
         }
         
-        // 4. Restore WiFi
         if (disableWifi) {
             Log.d(TAG, "Action: Enabling Wi-Fi")
             val output = executeCommand("svc wifi enable")
@@ -302,10 +276,10 @@ class EnforceDozeService : Service() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val channel = NotificationChannel(
                 CHANNEL_ID,
-                "Enforce Doze Service",
+                getString(R.string.doze_channel_name),
                 NotificationManager.IMPORTANCE_LOW
             ).apply {
-                description = "Keeps the Doze enforcer active"
+                description = getString(R.string.doze_channel_desc)
                 setShowBadge(false)
             }
             val manager = getSystemService(NotificationManager::class.java)
@@ -321,8 +295,8 @@ class EnforceDozeService : Service() {
         )
 
         return NotificationCompat.Builder(this, CHANNEL_ID)
-            .setContentTitle("Enforce Doze Active")
-            .setContentText("Maximizing deep sleep battery savings")
+            .setContentTitle(getString(R.string.doze_notif_title))
+            .setContentText(getString(R.string.doze_notif_desc))
             .setSmallIcon(R.drawable.ic_launcher_foreground)
             .setContentIntent(pendingIntent)
             .setOngoing(true)

@@ -771,7 +771,7 @@ private fun TechnicalNotes() {
         Text(text = stringResource(R.string.uv_notes_title), style = MaterialTheme.typography.labelSmall, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f), modifier = Modifier.padding(bottom = 8.dp))
         Text(text = stringResource(R.string.uv_notes_text), style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant, lineHeight = 16.sp)
         Spacer(Modifier.height(8.dp))
-        Text(text = "CRITICAL: The values configured above are step multipliers, not exact millivolts. 1 step is equal to approximately -6mV reduction. A value of -11 equals -66mV. Values exceeding -15 can cause severe system instability or reboot cycles.", style = MaterialTheme.typography.bodySmall, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.error, lineHeight = 16.sp)
+        Text(text = stringResource(R.string.uv_critical_warning), style = MaterialTheme.typography.bodySmall, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.error, lineHeight = 16.sp)
     }
 }
 
@@ -787,7 +787,7 @@ private fun UndervoltInfoDialog(context: android.content.Context, onDismiss: () 
                 Text(stringResource(R.string.dialog_uv_info_1), style = MaterialTheme.typography.bodyMedium)
                 Text(stringResource(R.string.dialog_uv_info_2), style = MaterialTheme.typography.bodyMedium)
                 Text(stringResource(R.string.dialog_uv_info_3), style = MaterialTheme.typography.bodyMedium, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.primary)
-                Text("Warning: 1 Step = ≈ -6mV", style = MaterialTheme.typography.bodyMedium, fontWeight = FontWeight.Black, color = MaterialTheme.colorScheme.error)
+                Text(stringResource(R.string.uv_warning_step), style = MaterialTheme.typography.bodyMedium, fontWeight = FontWeight.Black, color = MaterialTheme.colorScheme.error)
 
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
@@ -801,7 +801,7 @@ private fun UndervoltInfoDialog(context: android.content.Context, onDismiss: () 
                         onCheckedChange = { dontShowAgain = it }
                     )
                     Spacer(Modifier.width(8.dp))
-                    Text("Don't show again", style = MaterialTheme.typography.bodyMedium)
+                    Text(stringResource(R.string.uv_dont_show_again), style = MaterialTheme.typography.bodyMedium)
                 }
             }
         },

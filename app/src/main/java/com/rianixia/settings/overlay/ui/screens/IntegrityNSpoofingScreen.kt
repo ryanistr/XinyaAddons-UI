@@ -1,4 +1,3 @@
-// File: app/src/main/java/com/rianixia/settings/overlay/ui/screens/IntegrityNSpoofingScreen.kt
 package com.rianixia.settings.overlay.ui.screens
 
 import android.net.Uri
@@ -313,11 +312,11 @@ fun IntegrityNSpoofingScreen(
                                                         color = MaterialTheme.colorScheme.onSecondaryContainer
                                                     )
                                                     Spacer(Modifier.width(12.dp))
-                                                    Text("Fetching...", fontWeight = FontWeight.Bold, style = MaterialTheme.typography.titleMedium)
+                                                    Text(stringResource(R.string.pif_fetching), fontWeight = FontWeight.Bold, style = MaterialTheme.typography.titleMedium)
                                                 } else {
                                                     Icon(Icons.Rounded.Download, contentDescription = null, modifier = Modifier.size(20.dp))
                                                     Spacer(Modifier.width(12.dp))
-                                                    Text("Fetch Fingerprint", fontWeight = FontWeight.Bold, style = MaterialTheme.typography.titleMedium)
+                                                    Text(stringResource(R.string.pif_fetch_fingerprint), fontWeight = FontWeight.Bold, style = MaterialTheme.typography.titleMedium)
                                                 }
                                             }
                                         }

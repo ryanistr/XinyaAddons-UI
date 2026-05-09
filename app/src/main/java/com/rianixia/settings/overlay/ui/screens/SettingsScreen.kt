@@ -54,11 +54,9 @@ fun SettingsScreen(
                     contentPadding = PaddingValues(top = 100.dp, bottom = 40.dp, start = 16.dp, end = 16.dp),
                     verticalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
-                    // 1. App Configuration
                     item {
                          PreferenceSectionHeader(title = stringResource(R.string.pref_category_general))
                          MaterialGlassCard {
-                             // Launcher Icon Toggle
                              SettingsToggle(
                                  title = stringResource(R.string.pref_launcher_icon_title),
                                  desc = stringResource(R.string.pref_launcher_icon_desc),
@@ -69,10 +67,9 @@ fun SettingsScreen(
 
                              MaterialDivider()
 
-                             // Safety Mode Toggle
                              SettingsToggle(
-                                 title = "Safety Mode", // Use resource string in production: stringResource(R.string.pref_safety_mode_title)
-                                 desc = "Reset dangerous settings on reboot", // Use resource string in production: stringResource(R.string.pref_safety_mode_desc)
+                                 title = stringResource(R.string.pref_safety_mode_title),
+                                 desc = stringResource(R.string.pref_safety_mode_desc),
                                  icon = Icons.Rounded.Security,
                                  checked = state.isSafetyModeEnabled,
                                  onCheckedChange = { viewModel.toggleSafetyMode(it) }
@@ -80,12 +77,10 @@ fun SettingsScreen(
                          }
                     }
 
-                    // 2. Donation Banner
                     item {
                         SupportBanner()
                     }
 
-                    // 3. Placeholder for future
                     item {
                         Box(
                             modifier = Modifier

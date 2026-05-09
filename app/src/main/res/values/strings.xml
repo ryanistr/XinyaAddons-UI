@@ -400,4 +400,68 @@
 
     <string name="az_notif_active_title">Performance Profile Active</string>
     <string name="az_notif_active_desc">Optimizing %1$s</string>
+
+    <string name="halo_effect_static">Static</string>
+    <string name="halo_effect_flowing_notify">Flowing\nNotify</string>
+    <string name="halo_effect_breathing_notify">Breathing\nNotify</string>
+    <string name="halo_effect_flowing_light">Flowing\nLight</string>
+    <string name="halo_effect_gt_racing">GT\nRacing</string>
+    <string name="halo_effect_helium_flash">Helium\nFlash</string>
+    <string name="halo_effect_air_flow">Air\nFlow</string>
+    <string name="halo_effect_charging">Charging</string>
+    <string name="halo_effect_breathing">Breathing</string>
+    <string name="halo_effect_meteor">Meteor</string>
+    <string name="halo_effect_flow">Flow</string>
+    <string name="halo_effect_startup">Startup</string>
+
+    <string name="halo_off">Off</string>
+    <string name="halo_experimental_title">Experimental Feature</string>
+    <string name="halo_experimental_desc">Everything on this page is experimental and might have some slight issues, but don\'t worry, a simple reboot should be enough to fix it.\n\nThe halolight is currently under development. If you\'d like to contribute, please consider donating.</string>
+    <string name="halo_live_preview">Live Preview</string>
+    <string name="halo_enable_title">Enable Halo Lighting</string>
+    <string name="halo_enable_desc">Master switch for rear indicator matrix</string>
+    <string name="halo_anim_matrix">Animation Matrix</string>
+    <string name="halo_matrix_intensity">Matrix Intensity</string>
+    <string name="halo_matrix_title">Halo Matrix</string>
+    <string name="halo_brightness_level">Brightness Level</string>
+
+    <string name="sd_confirm_res_title">Confirm Resolution</string>
+    <string name="sd_confirm_res_desc">Do you want to keep the new screen resolution? Reverting to previous state in %1$d seconds.</string>
+    <string name="sd_keep_changes">Keep Changes</string>
+    <string name="sd_revert">Revert</string>
+    <string name="sd_display_matrix">Display Matrix</string>
+    <string name="sd_vsync_title">VSync</string>
+    <string name="sd_vsync_desc">Synchronize frame rates to prevent screen tearing. Disabling may improve performance and touch responsiveness at the cost of potential visual artifacts.</string>
+    <string name="sd_extra_dim_title">Extra Dim Mode</string>
+    <string name="sd_extra_dim_desc">Reduce brightness below the minimum system level</string>
+    <string name="sd_dim_intensity">Dim Intensity</string>
+    <string name="sd_render_res_target">Render Resolution Target</string>
+    <string name="sd_active">active</string>
+    <string name="sd_select_resolution">Select Resolution</string>
+    <string name="sd_default_native">Default (Native)</string>
+    <string name="sd_apply_resolution">Apply Resolution</string>
+
+    <string name="pif_fetching">Fetching...</string>
+    <string name="pif_fetch_fingerprint">Fetch Fingerprint</string>
+
+    <string name="pref_safety_mode_title">Safety Mode</string>
+    <string name="pref_safety_mode_desc">Reset dangerous settings on reboot</string>
+
+    <string name="uv_critical_warning">CRITICAL: The values configured above are step multipliers, not exact millivolts. 1 step is equal to approximately -6mV reduction. A value of -11 equals -66mV. Values exceeding -15 can cause severe system instability or reboot cycles.</string>
+    <string name="uv_warning_step">Warning: 1 Step = ≈ -6mV</string>
+    <string name="uv_dont_show_again">Don\'t show again</string>
+
+    <string name="doze_notif_title">Enforce Doze Active</string>
+    <string name="doze_notif_desc">Maximizing deep sleep battery savings</string>
+    <string name="doze_channel_desc">Keeps the Doze enforcer active</string>
+    <string name="doze_channel_name">Enforce Doze Service</string>
+
+    <string name="tile_off">Off</string>
+    <string name="tile_enabled">Enabled</string>
+    <string name="tile_disabled">Disabled</string>
+    <string name="tile_active">Active</string>
+    <string name="tile_hidden">Hidden</string>
+    <string name="tile_visible">Visible</string>
+    <string name="tile_running">Running</string>
+    <string name="tile_stopped">Stopped</string>
 </resources>

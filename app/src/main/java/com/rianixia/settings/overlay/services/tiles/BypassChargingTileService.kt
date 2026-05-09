@@ -4,6 +4,7 @@ import android.content.Intent
 import android.service.quicksettings.Tile
 import android.service.quicksettings.TileService
 import com.rianixia.settings.overlay.MainActivity
+import com.rianixia.settings.overlay.R
 
 class BypassChargingTileService : TileService() {
 
@@ -28,10 +29,10 @@ class BypassChargingTileService : TileService() {
 
         if (currentState == "1") {
             tile.state = Tile.STATE_ACTIVE
-            tile.subtitle = "Active"
+            tile.subtitle = getString(R.string.tile_active)
         } else {
             tile.state = Tile.STATE_INACTIVE
-            tile.subtitle = "Disabled"
+            tile.subtitle = getString(R.string.tile_disabled)
         }
         tile.updateTile()
     }

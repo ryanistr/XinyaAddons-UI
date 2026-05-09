@@ -2,6 +2,7 @@ package com.rianixia.settings.overlay.services.tiles
 
 import android.service.quicksettings.Tile
 import android.service.quicksettings.TileService
+import com.rianixia.settings.overlay.R
 
 class HaloFlashTileService : TileService() {
     private val flashProp = "persist.sys.rianixia.halolight.flash"
@@ -29,10 +30,10 @@ class HaloFlashTileService : TileService() {
 
         if (currentFlash == "1" || currentFlash.equals("true", ignoreCase = true)) {
             tile.state = Tile.STATE_ACTIVE
-            tile.subtitle = "Active"
+            tile.subtitle = getString(R.string.tile_active)
         } else {
             tile.state = Tile.STATE_INACTIVE
-            tile.subtitle = "Off"
+            tile.subtitle = getString(R.string.tile_off)
         }
         tile.updateTile()
     }

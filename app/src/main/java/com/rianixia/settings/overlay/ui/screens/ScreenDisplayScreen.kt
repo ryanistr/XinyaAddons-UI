@@ -1,4 +1,3 @@
-// File: main/java/com/rianixia/settings/overlay/ui/screens/ScreenDisplayScreen.kt
 package com.rianixia.settings.overlay.ui.screens
 
 import android.util.Log
@@ -23,11 +22,13 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogProperties
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import com.rianixia.settings.overlay.R
 import com.rianixia.settings.overlay.ui.components.*
 import com.rianixia.settings.overlay.ui.viewmodel.ScreenDisplayViewModel
 import dev.chrisbanes.haze.HazeState
@@ -48,6 +49,7 @@ fun ScreenDisplayScreen(
     val hazeState = remember { HazeState() }
     
     var selectedResolution by remember { mutableStateOf<String?>(null) }
+    val defaultNativeLabel = stringResource(R.string.sd_default_native)
 
     LaunchedEffect(selectedResolution, resState.currentRes, resState.pendingRes) {
         val isDefaultRedundant = selectedResolution == "Reset" && resState.currentRes == resState.physicalRes
@@ -58,16 +60,16 @@ fun ScreenDisplayScreen(
     if (resState.pendingRes != null) {
         AlertDialog(
             onDismissRequest = { },
-            title = { Text("Confirm Resolution", fontWeight = FontWeight.Bold) },
+            title = { Text(stringResource(R.string.sd_confirm_res_title), fontWeight = FontWeight.Bold) },
             text = {
-                Text("Do you want to keep the new screen resolution? Reverting to previous state in ${resState.countdown} seconds.")
+                Text(stringResource(R.string.sd_confirm_res_desc, resState.countdown))
             },
             confirmButton = {
                 Button(onClick = {
                     Log.d(TAG, "Dialog: Keep Changes clicked")
                     viewModel.confirmResolution()
                 }) {
-                    Text("Keep Changes")
+                    Text(stringResource(R.string.sd_keep_changes))
                 }
             },
             dismissButton = {
@@ -75,7 +77,7 @@ fun ScreenDisplayScreen(
                     Log.d(TAG, "Dialog: Revert clicked")
                     viewModel.revertResolution()
                 }) {
-                    Text("Revert")
+                    Text(stringResource(R.string.sd_revert))
                 }
             },
             properties = DialogProperties(
@@ -97,10 +99,10 @@ fun ScreenDisplayScreen(
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 item {
-                    MaterialGlassCard(header = "Display Matrix") {
+                    MaterialGlassCard(header = stringResource(R.string.sd_display_matrix)) {
                         XinyaToggle(
-                            title = "VSync",
-                            subtitle = "Synchronize frame rates to prevent screen tearing. Disabling may improve performance and touch responsiveness at the cost of potential visual artifacts.",
+                            title = stringResource(R.string.sd_vsync_title),
+                            subtitle = stringResource(R.string.sd_vsync_desc),
                             icon = Icons.Rounded.Sync,
                             checked = vSync,
                             onCheckedChange = { viewModel.toggleVSync(it) },
@@ -109,8 +111,8 @@ fun ScreenDisplayScreen(
                         MaterialDivider()
                         Column {
                             XinyaToggle(
-                                title = "Extra Dim Mode",
-                                subtitle = "Reduce brightness below the minimum system level",
+                                title = stringResource(R.string.sd_extra_dim_title),
+                                subtitle = stringResource(R.string.sd_extra_dim_desc),
                                 icon = Icons.Rounded.BrightnessLow,
                                 checked = extraDim,
                                 onCheckedChange = { viewModel.toggleExtraDim(it) },
@@ -123,7 +125,7 @@ fun ScreenDisplayScreen(
                                         modifier = Modifier.fillMaxWidth(),
                                         horizontalArrangement = Arrangement.SpaceBetween
                                     ) {
-                                        Text("Dim Intensity", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                                        Text(stringResource(R.string.sd_dim_intensity), style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                                         Text("${(intensity * 100).toInt()}%", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.primary, fontWeight = FontWeight.Bold)
                                     }
                                     Slider(
@@ -142,7 +144,7 @@ fun ScreenDisplayScreen(
                 }
                 
                 item {
-                    MaterialGlassCard(header = "Render Resolution Target") {
+                    MaterialGlassCard(header = stringResource(R.string.sd_render_res_target)) {
                         Row(
                             verticalAlignment = Alignment.CenterVertically,
                             modifier = Modifier.padding(bottom = 14.dp)
@@ -166,7 +168,7 @@ fun ScreenDisplayScreen(
                                         color = MaterialTheme.colorScheme.primary
                                     )
                                     Text(
-                                        text = "active",
+                                        text = stringResource(R.string.sd_active),
                                         style = MaterialTheme.typography.labelSmall,
                                         color = MaterialTheme.colorScheme.primary.copy(alpha = 0.6f)
                                     )
@@ -185,7 +187,7 @@ fun ScreenDisplayScreen(
                             val currentActiveRes = if (resState.currentRes == resState.physicalRes && resState.physicalRes != "Unknown") "Reset" else resState.currentRes
                             val displayedSelection = selectedResolution ?: currentActiveRes
                             GlassDropdown(
-                                label = "Select Resolution",
+                                label = stringResource(R.string.sd_select_resolution),
                                 options = resState.availableResolutions,
                                 selectedOption = displayedSelection,
                                 onOptionSelected = { res ->
@@ -193,7 +195,7 @@ fun ScreenDisplayScreen(
                                     selectedResolution = res
                                 },
                                 itemLabelMapper = { res ->
-                                    if (res == "Reset") "Default (Native)" else "${res.substringBefore('x')}p ($res)"
+                                    if (res == "Reset") defaultNativeLabel else "${res.substringBefore('x')}p ($res)"
                                 },
                                 enabled = resState.pendingRes == null,
                                 color = MaterialTheme.colorScheme.primary,
@@ -205,7 +207,7 @@ fun ScreenDisplayScreen(
             }
             
             GradientBlurAppBar(
-                title = "Display Matrix",
+                title = stringResource(R.string.sd_display_matrix),
                 icon = Icons.Rounded.DisplaySettings,
                 onBackClick = { navController.popBackStack() },
                 hazeState = hazeState,
@@ -235,7 +237,7 @@ fun ScreenDisplayScreen(
                     containerColor = MaterialTheme.colorScheme.primary,
                     contentColor = MaterialTheme.colorScheme.onPrimary
                 ) {
-                    Icon(Icons.Rounded.Check, contentDescription = "Apply Resolution")
+                    Icon(Icons.Rounded.Check, contentDescription = stringResource(R.string.sd_apply_resolution))
                 }
             }
         }

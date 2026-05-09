@@ -400,4 +400,68 @@
 
     <string name="az_notif_active_title">Profil Performa Aktif</string>
     <string name="az_notif_active_desc">Mengoptimalkan %1$s</string>
+
+    <string name="halo_effect_static">Statis</string>
+    <string name="halo_effect_flowing_notify">Mengalir\nNotifikasi</string>
+    <string name="halo_effect_breathing_notify">Bernapas\nNotifikasi</string>
+    <string name="halo_effect_flowing_light">Cahaya\nMengalir</string>
+    <string name="halo_effect_gt_racing">Balap\nGT</string>
+    <string name="halo_effect_helium_flash">Kilatan\nHelium</string>
+    <string name="halo_effect_air_flow">Aliran\nUdara</string>
+    <string name="halo_effect_charging">Mengisi Daya</string>
+    <string name="halo_effect_breathing">Bernapas</string>
+    <string name="halo_effect_meteor">Meteor</string>
+    <string name="halo_effect_flow">Mengalir</string>
+    <string name="halo_effect_startup">Memulai</string>
+
+    <string name="halo_off">Mati</string>
+    <string name="halo_experimental_title">Fitur Eksperimental</string>
+    <string name="halo_experimental_desc">Segala sesuatu di halaman ini bersifat eksperimental dan mungkin memiliki sedikit masalah, tapi jangan khawatir, reboot sederhana sudah cukup untuk memperbaikinya.\n\nHalolight saat ini sedang dalam tahap pengembangan. Jika Anda ingin berkontribusi, harap pertimbangkan untuk berdonasi.</string>
+    <string name="halo_live_preview">Pratinjau Langsung</string>
+    <string name="halo_enable_title">Aktifkan Pencahayaan Halo</string>
+    <string name="halo_enable_desc">Sakelar utama untuk matriks indikator belakang</string>
+    <string name="halo_anim_matrix">Matriks Animasi</string>
+    <string name="halo_matrix_intensity">Intensitas Matriks</string>
+    <string name="halo_matrix_title">Matriks Halo</string>
+    <string name="halo_brightness_level">Tingkat Kecerahan</string>
+
+    <string name="sd_confirm_res_title">Konfirmasi Resolusi</string>
+    <string name="sd_confirm_res_desc">Apakah Anda ingin mempertahankan resolusi layar baru? Mengembalikan ke keadaan sebelumnya dalam %1$d detik.</string>
+    <string name="sd_keep_changes">Simpan Perubahan</string>
+    <string name="sd_revert">Kembalikan</string>
+    <string name="sd_display_matrix">Matriks Layar</string>
+    <string name="sd_vsync_title">VSync</string>
+    <string name="sd_vsync_desc">Sinkronkan kecepatan bingkai untuk mencegah kerusakan gambar (screen tearing). Menonaktifkannya dapat meningkatkan kinerja dan responsivitas sentuhan dengan risiko potensi artefak visual.</string>
+    <string name="sd_extra_dim_title">Mode Ekstra Redup</string>
+    <string name="sd_extra_dim_desc">Kurangi kecerahan di bawah tingkat minimum sistem</string>
+    <string name="sd_dim_intensity">Intensitas Redup</string>
+    <string name="sd_render_res_target">Target Resolusi Render</string>
+    <string name="sd_active">aktif</string>
+    <string name="sd_select_resolution">Pilih Resolusi</string>
+    <string name="sd_default_native">Bawaan (Asli)</string>
+    <string name="sd_apply_resolution">Terapkan Resolusi</string>
+
+    <string name="pif_fetching">Mengambil...</string>
+    <string name="pif_fetch_fingerprint">Ambil Sidik Jari</string>
+
+    <string name="pref_safety_mode_title">Mode Aman</string>
+    <string name="pref_safety_mode_desc">Atur ulang pengaturan berbahaya saat reboot</string>
+
+    <string name="uv_critical_warning">KRITIS: Nilai yang dikonfigurasi di atas adalah pengganda langkah, bukan milivolt yang tepat. 1 langkah sama dengan pengurangan sekitar -6mV. Nilai -11 sama dengan -66mV. Nilai yang melebihi -15 dapat menyebabkan ketidakstabilan sistem yang parah atau siklus reboot.</string>
+    <string name="uv_warning_step">Peringatan: 1 Langkah = ≈ -6mV</string>
+    <string name="uv_dont_show_again">Jangan tampilkan lagi</string>
+
+    <string name="doze_notif_title">Enforce Doze Aktif</string>
+    <string name="doze_notif_desc">Memaksimalkan penghematan baterai tidur lelap</string>
+    <string name="doze_channel_desc">Menjaga pendorong Doze tetap aktif</string>
+    <string name="doze_channel_name">Layanan Enforce Doze</string>
+
+    <string name="tile_off">Mati</string>
+    <string name="tile_enabled">Diaktifkan</string>
+    <string name="tile_disabled">Dinonaktifkan</string>
+    <string name="tile_active">Aktif</string>
+    <string name="tile_hidden">Tersembunyi</string>
+    <string name="tile_visible">Terlihat</string>
+    <string name="tile_running">Berjalan</string>
+    <string name="tile_stopped">Berhenti</string>
 </resources>

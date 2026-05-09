@@ -2,6 +2,7 @@ package com.rianixia.settings.overlay.services.tiles
 
 import android.service.quicksettings.Tile
 import android.service.quicksettings.TileService
+import com.rianixia.settings.overlay.R
 
 class AutoCutTileService : TileService() {
     private val stateProp = "persist.sys.rianixia.autocut.state"
@@ -45,7 +46,7 @@ class AutoCutTileService : TileService() {
             tile.subtitle = "$currentPercent%"
         } else {
             tile.state = Tile.STATE_INACTIVE
-            tile.subtitle = "Off"
+            tile.subtitle = getString(R.string.tile_off)
         }
         tile.updateTile()
     }

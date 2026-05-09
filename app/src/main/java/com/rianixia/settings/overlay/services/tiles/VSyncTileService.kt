@@ -2,6 +2,7 @@ package com.rianixia.settings.overlay.services.tiles
 
 import android.service.quicksettings.Tile
 import android.service.quicksettings.TileService
+import com.rianixia.settings.overlay.R
 
 class VSyncTileService : TileService() {
     private val propKey = "persist.sys.rianixia.display.vsync"
@@ -23,10 +24,10 @@ class VSyncTileService : TileService() {
         val tile = qsTile ?: return
         if (getSystemProperty(propKey) == "1") {
             tile.state = Tile.STATE_ACTIVE
-            tile.subtitle = "Enabled"
+            tile.subtitle = getString(R.string.tile_enabled)
         } else {
             tile.state = Tile.STATE_INACTIVE
-            tile.subtitle = "Disabled"
+            tile.subtitle = getString(R.string.tile_disabled)
         }
         tile.updateTile()
     }

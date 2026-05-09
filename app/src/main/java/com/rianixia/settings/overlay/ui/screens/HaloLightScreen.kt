@@ -30,12 +30,14 @@ import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.drawscope.rotate
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalUriHandler
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.DialogProperties
 import androidx.navigation.NavController
+import com.rianixia.settings.overlay.R
 import com.rianixia.settings.overlay.ui.components.*
 import com.rianixia.settings.overlay.ui.viewmodel.HaloLightViewModel
 import dev.chrisbanes.haze.HazeState
@@ -44,7 +46,7 @@ import kotlin.math.roundToInt
 
 private data class EffectMeta(
     val key: String,
-    val label: String,
+    val labelRes: Int,
     val accentColor: Color
 )
 
@@ -57,18 +59,18 @@ private val effectPalette = listOf(
 )
 
 private val effectMetas = listOf(
-    EffectMeta("Static",             "Static",          effectPalette[0]),
-    EffectMeta("FlowingLightNotify", "Flowing\nNotify", effectPalette[1]),
-    EffectMeta("BreathingNotify",    "Breathing\nNotify", effectPalette[0]),
-    EffectMeta("FlowingLight",       "Flowing\nLight",  effectPalette[1]),
-    EffectMeta("GTRacing",           "GT\nRacing",      effectPalette[2]),
-    EffectMeta("HeliumFlash",        "Helium\nFlash",   effectPalette[2]),
-    EffectMeta("AirFlow",            "Air\nFlow",       effectPalette[1]),
-    EffectMeta("Charging",           "Charging",        effectPalette[3]),
-    EffectMeta("Breathing",          "Breathing",       effectPalette[0]),
-    EffectMeta("Meteor",             "Meteor",          effectPalette[4]),
-    EffectMeta("Flow",               "Flow",            effectPalette[1]),
-    EffectMeta("Startup2",           "Startup",         effectPalette[3])
+    EffectMeta("Static",             R.string.halo_effect_static,          effectPalette[0]),
+    EffectMeta("FlowingLightNotify", R.string.halo_effect_flowing_notify,    effectPalette[1]),
+    EffectMeta("BreathingNotify",    R.string.halo_effect_breathing_notify,  effectPalette[0]),
+    EffectMeta("FlowingLight",       R.string.halo_effect_flowing_light,     effectPalette[1]),
+    EffectMeta("GTRacing",           R.string.halo_effect_gt_racing,         effectPalette[2]),
+    EffectMeta("HeliumFlash",        R.string.halo_effect_helium_flash,      effectPalette[2]),
+    EffectMeta("AirFlow",            R.string.halo_effect_air_flow,          effectPalette[1]),
+    EffectMeta("Charging",           R.string.halo_effect_charging,          effectPalette[3]),
+    EffectMeta("Breathing",          R.string.halo_effect_breathing,         effectPalette[0]),
+    EffectMeta("Meteor",             R.string.halo_effect_meteor,            effectPalette[4]),
+    EffectMeta("Flow",               R.string.halo_effect_flow,              effectPalette[1]),
+    EffectMeta("Startup2",           R.string.halo_effect_startup,           effectPalette[3])
 )
 
 @Composable
@@ -365,8 +367,13 @@ private fun HaloRingPreview(
 
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
             Spacer(Modifier.height(88.dp))
+            val labelText = if (isEnabled) {
+                meta?.labelRes?.let { stringResource(it).replace("\n", " ") } ?: effect
+            } else {
+                stringResource(R.string.halo_off)
+            }
             Text(
-                text = if (isEnabled) (meta?.label?.replace("\n", " ") ?: effect) else "Off",
+                text = labelText,
                 style = MaterialTheme.typography.labelSmall,
                 color = animatedColor.copy(alpha = 0.7f),
                 textAlign = TextAlign.Center,
@@ -395,10 +402,10 @@ fun HaloLightScreen(
         AlertDialog(
             onDismissRequest = { },
             icon = { Icon(Icons.Rounded.Science, null, tint = MaterialTheme.colorScheme.primary) },
-            title = { Text("Experimental Feature", fontWeight = FontWeight.Bold) },
+            title = { Text(stringResource(R.string.halo_experimental_title), fontWeight = FontWeight.Bold) },
             text = {
                 Text(
-                    "Everything on this page is experimental and might have some slight issues, but don't worry, a simple reboot should be enough to fix it.\n\nThe halolight is currently under development. If you'd like to contribute, please consider donating.",
+                    stringResource(R.string.halo_experimental_desc),
                     style = MaterialTheme.typography.bodyMedium
                 )
             },
@@ -408,7 +415,7 @@ fun HaloLightScreen(
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     TextButton(onClick = { uriHandler.openUri("https://t.me/xiaallkay/6") }) {
-                        Text("Donate", color = MaterialTheme.colorScheme.tertiary, fontWeight = FontWeight.Bold)
+                        Text(stringResource(R.string.btn_donate), color = MaterialTheme.colorScheme.tertiary, fontWeight = FontWeight.Bold)
                     }
                     Button(
                         onClick = {
@@ -417,7 +424,7 @@ fun HaloLightScreen(
                         },
                         modifier = Modifier.fillMaxWidth()
                     ) {
-                        Text("Understood", fontWeight = FontWeight.Bold)
+                        Text(stringResource(R.string.btn_understand), fontWeight = FontWeight.Bold)
                     }
                 }
             },
@@ -459,7 +466,7 @@ fun HaloLightScreen(
                                 )
                                 Spacer(Modifier.height(4.dp))
                                 Text(
-                                    text = "Live Preview",
+                                    text = stringResource(R.string.halo_live_preview),
                                     style = MaterialTheme.typography.labelSmall,
                                     color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f)
                                 )
@@ -469,8 +476,8 @@ fun HaloLightScreen(
                                 )
                                 Spacer(Modifier.height(16.dp))
                                 XinyaToggle(
-                                    title = "Enable Halo Lighting",
-                                    subtitle = "Master switch for rear indicator matrix",
+                                    title = stringResource(R.string.halo_enable_title),
+                                    subtitle = stringResource(R.string.halo_enable_desc),
                                     icon = Icons.Rounded.PowerSettingsNew,
                                     checked = isEnabled,
                                     onCheckedChange = { viewModel.toggleHalo(it) }
@@ -488,7 +495,7 @@ fun HaloLightScreen(
                                     verticalAlignment = Alignment.CenterVertically
                                 ) {
                                     Text(
-                                        text = "Animation Matrix",
+                                        text = stringResource(R.string.halo_anim_matrix),
                                         style = MaterialTheme.typography.titleMedium,
                                         color = MaterialTheme.colorScheme.onSurface
                                     )
@@ -499,7 +506,7 @@ fun HaloLightScreen(
                                         else
                                             MaterialTheme.colorScheme.onSurface.copy(alpha = 0.3f)
                                         MaterialGlassBadge(
-                                            text = activeMeta.label.replace("\n", " "),
+                                            text = stringResource(activeMeta.labelRes).replace("\n", " "),
                                             containerColor = badgeColor,
                                             contentColor = badgeColor
                                         )
@@ -539,7 +546,7 @@ fun HaloLightScreen(
                                     verticalAlignment = Alignment.CenterVertically
                                 ) {
                                     Text(
-                                        "Matrix Intensity",
+                                        stringResource(R.string.halo_matrix_intensity),
                                         style = MaterialTheme.typography.titleMedium,
                                         color = MaterialTheme.colorScheme.onSurface
                                     )
@@ -568,7 +575,7 @@ fun HaloLightScreen(
             }
 
             GradientBlurAppBar(
-                title = "Halo Matrix",
+                title = stringResource(R.string.halo_matrix_title),
                 icon = Icons.Rounded.Lightbulb,
                 onBackClick = { navController.popBackStack() },
                 hazeState = hazeState,
@@ -657,7 +664,7 @@ private fun AnimationToggleButton(
             )
             Spacer(Modifier.height(5.dp))
             Text(
-                text = meta.label,
+                text = stringResource(meta.labelRes),
                 style = MaterialTheme.typography.labelSmall,
                 fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal,
                 color = if (isSelected && enabled) accentColor else colorScheme.onSurfaceVariant.copy(alpha = animatedAlpha),
@@ -708,7 +715,7 @@ private fun GradientBrightnessSlider(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                "Brightness Level",
+                stringResource(R.string.halo_brightness_level),
                 style = MaterialTheme.typography.labelMedium,
                 color = colorScheme.onSurface.copy(alpha = if (enabled) 1f else 0.5f)
             )
