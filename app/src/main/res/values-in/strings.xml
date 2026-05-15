@@ -58,7 +58,7 @@
     <string name="gov_control">Kontrol Governor</string>
     <string name="freq_scaling">Frekuensi &amp; Scaling</string>
     <string name="gm_bst">Game Boost</string>
-    <string name="azenith">Mesin AZenith</string>
+    <string name="azenith">AZenith</string>
     <string name="pwr_vlt">Voltase</string>
     <string name="undervolt">Undervolt</string>
     <string name="io_sched_label">I/O Scheduler</string>
@@ -126,9 +126,9 @@
     <string name="hardware_matrix">Software</string>
     <string name="id_matrix_label">Lainnya</string>
     <string name="identity_spoofing">Spoofing &amp; Integritas</string>
-    <string name="identity_desc">PlayIntegrity · GPhotos · FPS Unlocker · dll</string>
+    <string name="identity_desc">PlayIntegrity · UnliGPhotos · FPS Unlocker · dll</string>
     <string name="vis_fx">Backlight</string>
-    <string name="halo_light">Lampu Halo</string>
+    <string name="halo_light">Halo Efek</string>
     <string name="disp_cfg">Layar</string>
     <string name="resolution">Resolusi</string>
     <string name="hw_therm">Suhu</string>
@@ -144,7 +144,7 @@
     <string name="sys_flag_secure_desc">Biar bisa screenshot dan rekam layar di aplikasi atau jendela yang dikunci.</string>
     
     <string name="sys_rotation_title">Sembunyikan Tombol Rotasi</string>
-    <string name="sys_rotation_desc">Nyembunyiin tombol rotasi yang biasa muncul di navbar waktu hp dimiringin.</string>
+    <string name="sys_rotation_desc">Nyembunyiin tombol rotasi yang biasa muncul di pojok kiri waktu hp dimiringin.</string>
 
     <string name="spoof_dashboard">Spoofing Identitas</string>
     <string name="pif_section_title">Play Integrity Fix</string>
@@ -161,7 +161,7 @@
     <string name="pif_update_now">Update PIF Sekarang</string>
     <string name="pif_keybox_loaded">Keybox Terpasang</string>
     <string name="pif_no_keybox">Keybox Belum Terpasang</string>
-    <string name="pif_keybox_ready">Siap di-inject</string>
+    <string name="pif_keybox_ready">Berfungsi</string>
     <string name="pif_keybox_import_required">Butuh impor</string>
     <string name="pif_import_keybox">Impor Keybox</string>
     
@@ -175,7 +175,7 @@
     <string name="spoof_game_desc">Spoof hp per-aplikasi buat unlock fitur dan grafik game.</string>
     <string name="spoof_identity_header">IDENTITAS DEVICE (SYSTEM PROPS)</string>
     <string name="spoof_target_header">APLIKASI TARGET</string>
-    <string name="spoof_no_apps">Nggak ada aplikasi yang dipilih. Profil ini nonaktif.</string>
+    <string name="spoof_no_apps">Tidak ada aplikasi yang dipilih. Profil ini nonaktif.</string>
     <string name="spoof_profile_stats_fmt">%1$s %2$s • %3$d Aplikasi (%4$d aktif)</string>
     
     <string name="prop_brand">BRAND</string>
@@ -186,17 +186,17 @@
     <string name="dialog_import_failed_title">Gagal Impor</string>
     <string name="dialog_import_failed_msg">Gagal baca data, file yang kamu impor udah bener belum?</string>
     <string name="dialog_new_profile_title">Profil Device Baru</string>
-    <string name="dialog_new_profile_hint">ID Profil (contoh: GT20Pro)</string>
+    <string name="dialog_new_profile_hint">ID Profil (contoh: X7PRO)</string>
     <string name="dialog_select_app">Pilih Aplikasi</string>
     <string name="dialog_search">Cari</string>
     <string name="dialog_reset_profiles_title">Reset Profil?</string>
-    <string name="dialog_reset_profiles_desc">Ini bakal nimpa profil game custom kamu pakai template bawaan. Nggak bisa di-undo ya.</string>
+    <string name="dialog_reset_profiles_desc">Ini bakal menghapus profil game custom kamu dengan template bawaan. Aksi ini tidak dapat di-undo.</string>
     <string name="dialog_loading_apps_title">Memuat Aplikasi</string>
-    <string name="dialog_loading_apps_desc">Tunggu bentar, lagi scan aplikasi yang terinstal...</string>
+    <string name="dialog_loading_apps_desc">Tunggu sebentar, scanning aplikasi terinstal...</string>
 
     <string name="desc_add_profile">Tambah Profil</string>
 
-    <string name="thermal_engine">Mesin Thermal</string>
+    <string name="thermal_engine">Thermal</string>
     <string name="throttle_threshold">Batas Throttling</string>
     <string name="temp_current_fmt">Saat ini: %1$d°C</string>
     <string name="profile_os">OS</string>
@@ -316,8 +316,8 @@
     <string name="az_info_mem_desc">Cegah aplikasi pilihan biar nggak ditutup paksa sama Low Memory Killer (LMK).</string>
     
     <string name="az_master_switch">Saklar Utama</string>
-    <string name="az_engine_active">Mesin Aktif</string>
-    <string name="az_engine_offline">Mesin Offline</string>
+    <string name="az_engine_active">Aktif</string>
+    <string name="az_engine_offline">Offline</string>
     <string name="az_tag_recommended">Rekomendasi</string>
     <string name="menu_settings">Pengaturan</string>
     <string name="menu_about">Tentang</string>
@@ -431,7 +431,7 @@
     <string name="sd_revert">Kembalikan</string>
     <string name="sd_display_matrix">Matriks Layar</string>
     <string name="sd_vsync_title">VSync</string>
-    <string name="sd_vsync_desc">Sinkronkan kecepatan bingkai untuk mencegah kerusakan gambar (screen tearing). Menonaktifkannya dapat meningkatkan kinerja dan responsivitas sentuhan dengan risiko potensi artefak visual.</string>
+    <string name="sd_vsync_desc">Sinkronkan kecepatan bingkai untuk mencegah kerusakan gambar (screen tearing). Kalo di matiin bisa meningkatkan kinerja dan responsivitas sentuhan dengan risiko potensi artefak visual.</string>
     <string name="sd_extra_dim_title">Mode Ekstra Redup</string>
     <string name="sd_extra_dim_desc">Kurangi kecerahan di bawah tingkat minimum sistem</string>
     <string name="sd_dim_intensity">Intensitas Redup</string>
@@ -441,8 +441,8 @@
     <string name="sd_default_native">Bawaan (Asli)</string>
     <string name="sd_apply_resolution">Terapkan Resolusi</string>
 
-    <string name="pif_fetching">Mengambil...</string>
-    <string name="pif_fetch_fingerprint">Ambil Sidik Jari</string>
+    <string name="pif_fetching">Memperbarui...</string>
+    <string name="pif_fetch_fingerprint">Perbarui Fingerprint</string>
 
     <string name="pref_safety_mode_title">Mode Aman</string>
     <string name="pref_safety_mode_desc">Atur ulang pengaturan berbahaya saat reboot</string>

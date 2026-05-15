@@ -12,45 +12,64 @@ class OverlayService : BroadcastReceiver() {
 
     override fun onReceive(context: Context, intent: Intent) {
         val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        createNotificationChannel(notificationManager)
+        createNotificationChannels(notificationManager)
 
         when (intent.action) {
-            "com.rianixia.settings.THERMAL_ALERT" -> {
-                val temp = intent.getIntExtra("temp", 0)
-                val intensity = intent.getFloatExtra("intensity", 0f)
-                val percent = (intensity * 100).toInt()
+            "com.rianixia.settings.SHOW_NOTIFICATION" -> {
+                val title = intent.getStringExtra("title") ?: "System Notification"
+                val text = intent.getStringExtra("text") ?: ""
+                val notifId = intent.getIntExtra("id", DEFAULT_NOTIFICATION_ID)
+                val isSilent = intent.getBooleanExtra("silent", true)
+                val isOngoing = intent.getBooleanExtra("ongoing", false)
 
-                val notification = NotificationCompat.Builder(context, CHANNEL_ID)
+                val targetChannel = if (isSilent) SILENT_CHANNEL_ID else ALERT_CHANNEL_ID
+                val targetPriority = if (isSilent) NotificationCompat.PRIORITY_LOW else NotificationCompat.PRIORITY_HIGH
+
+                val notification = NotificationCompat.Builder(context, targetChannel)
                     .setSmallIcon(android.R.drawable.stat_sys_warning)
-                    .setContentTitle("Thermal Mitigation Active")
-                    .setContentText("Device at $temp°C. Throttling intensity: $percent%")
-                    .setPriority(NotificationCompat.PRIORITY_HIGH)
-                    .setOngoing(true)
+                    .setContentTitle(title)
+                    .setContentText(text)
+                    .setPriority(targetPriority)
+                    .setOngoing(isOngoing)
                     .build()
 
-                notificationManager.notify(NOTIFICATION_ID, notification)
+                notificationManager.notify(notifId, notification)
             }
-            "com.rianixia.settings.THERMAL_ALERT.CLEAR" -> {
-                notificationManager.cancel(NOTIFICATION_ID)
+            "com.rianixia.settings.CLEAR_NOTIFICATION" -> {
+                val notifId = intent.getIntExtra("id", DEFAULT_NOTIFICATION_ID)
+                notificationManager.cancel(notifId)
             }
         }
     }
 
-    private fun createNotificationChannel(manager: NotificationManager) {
+    private fun createNotificationChannels(manager: NotificationManager) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val channel = NotificationChannel(
-                CHANNEL_ID,
-                "Thermal Alerts",
+            val silentChannel = NotificationChannel(
+                SILENT_CHANNEL_ID,
+                "System Status (Silent)",
+                NotificationManager.IMPORTANCE_LOW
+            ).apply {
+                description = "Background system notifications"
+                setSound(null, null)
+                enableVibration(false)
+                setBypassDnd(false)
+            }
+            manager.createNotificationChannel(silentChannel)
+
+            val alertChannel = NotificationChannel(
+                ALERT_CHANNEL_ID,
+                "System Alerts",
                 NotificationManager.IMPORTANCE_HIGH
             ).apply {
-                description = "System notifications for device heating and thermal mitigation"
+                description = "Critical system alerts"
             }
-            manager.createNotificationChannel(channel)
+            manager.createNotificationChannel(alertChannel)
         }
     }
 
     companion object {
-        const val CHANNEL_ID = "thermal_alert_channel"
-        const val NOTIFICATION_ID = 5050
+        const val SILENT_CHANNEL_ID = "rianixia_status_silent_v2"
+        const val ALERT_CHANNEL_ID = "rianixia_alerts_v2"
+        const val DEFAULT_NOTIFICATION_ID = 5050
     }
 }

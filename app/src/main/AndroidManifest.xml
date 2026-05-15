@@ -17,6 +17,9 @@
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
     <uses-permission android:name="android.permission.INTERNAL_SYSTEM_WINDOW" />
     <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" tools:ignore="ScopedStorage" />
+    <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE" tools:ignore="ProtectedPermissions" />
 
     <application android:allowBackup="true" android:label="Xinya Toolkit" android:icon="@mipmap/ic_launcher" android:theme="@style/Theme.Rianixia" android:enableOnBackInvokedCallback="true">
         <activity android:name=".MainActivity" android:exported="true" android:label="Xinya Toolkit" android:icon="@mipmap/ic_launcher">
@@ -138,8 +141,8 @@
         </service>
         <receiver android:name=".OverlayService" android:exported="true">
             <intent-filter>
-                <action android:name="com.rianixia.settings.THERMAL_ALERT" />
-                <action android:name="com.rianixia.settings.THERMAL_ALERT.CLEAR" />
+                <action android:name="com.rianixia.settings.SHOW_NOTIFICATION" />
+                <action android:name="com.rianixia.settings.CLEAR_NOTIFICATION" />
             </intent-filter>
         </receiver>
     </application>

@@ -149,6 +149,10 @@ class MainActivity : ComponentActivity() {
                                     val vm: ScreenDisplayViewModel = viewModel()
                                     ScreenDisplayScreen(navController = navController, viewModel = vm) 
                                 }
+                                composable("color_calibration") {
+                                    val vm: ScreenDisplayViewModel = viewModel()
+                                    ColorCalibrationScreen(navController = navController, viewModel = vm)
+                                }
                                 composable("battery_center") { BatteryCenterScreen(navController) }
                                 composable("io_scheduler") { IoSchedulerScreen(navController) }
                                 composable("thermal_control") { ThermalControlScreen(navController) }

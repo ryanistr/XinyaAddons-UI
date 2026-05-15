@@ -441,6 +441,40 @@
     <string name="sd_default_native">Default (Native)</string>
     <string name="sd_apply_resolution">Apply Resolution</string>
 
+    <string name="sd_color_calibration_title">Color Calibration</string>
+    <string name="sd_color_calibration_desc">Adjust screen color temperature and saturation</string>
+    <string name="sd_color_red">Red Channel</string>
+    <string name="sd_color_red_desc">Adjust red intensity</string>
+    <string name="sd_color_green">Green Channel</string>
+    <string name="sd_color_green_desc">Adjust green intensity</string>
+    <string name="sd_color_blue">Blue Channel</string>
+    <string name="sd_color_blue_desc">Adjust blue intensity</string>
+    <string name="sd_color_saturation">Saturation</string>
+    <string name="sd_color_saturation_desc">Adjust overall color vibrancy</string>
+    <string name="sd_color_temp">Color Temperature</string>
+    <string name="sd_color_temp_desc">Adjust between warm and cold tones</string>
+    <string name="sd_color_temp_warm">Warm</string>
+    <string name="sd_color_temp_cold">Cold</string>
+    
+    <string name="sd_color_reset">Reset Calibration</string>
+    <string name="sd_color_reset_toast">Color settings reset to default</string>
+    
+    <string name="sd_color_presets_title">Color Presets</string>
+    <string name="sd_color_save_preset">Save Current as Preset</string>
+    <string name="sd_color_preset_name">Preset Name</string>
+    <string name="sd_color_preset_saved">Preset saved successfully</string>
+    <string name="sd_color_preset_loaded">Preset loaded: %1$s</string>
+    <string name="sd_color_preset_deleted">Preset deleted</string>
+    <string name="sd_color_no_presets">No saved presets</string>
+    <string name="sd_color_share_preset">Share Preset</string>
+    
+    <string name="sd_color_manual_input">Manual Value</string>
+    <string name="sd_color_enter_value">Enter value (0 - 2000)</string>
+    
+    <string name="sd_min_val">Min: %1$d</string>
+    <string name="sd_max_val">Max: %1$d</string>
+    <string name="sd_default_val">Default: %1$d</string>
+
     <string name="pif_fetching">Fetching...</string>
     <string name="pif_fetch_fingerprint">Fetch Fingerprint</string>
 

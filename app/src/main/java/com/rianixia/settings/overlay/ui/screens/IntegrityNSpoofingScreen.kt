@@ -279,18 +279,36 @@ fun IntegrityNSpoofingScreen(
 
                                             Spacer(Modifier.height(16.dp))
 
-                                            Button(
-                                                onClick = { xmlImportLauncher.launch("*/*") },
-                                                modifier = Modifier.fillMaxWidth().height(56.dp),
-                                                colors = ButtonDefaults.buttonColors(
-                                                    containerColor = MaterialTheme.colorScheme.primaryContainer,
-                                                    contentColor = MaterialTheme.colorScheme.onPrimaryContainer
-                                                ),
-                                                shape = RoundedCornerShape(12.dp)
-                                            ) {
-                                                Icon(Icons.Rounded.UploadFile, contentDescription = null, modifier = Modifier.size(20.dp))
-                                                Spacer(Modifier.width(12.dp))
-                                                Text(stringResource(R.string.pif_import_keybox), fontWeight = FontWeight.Bold, style = MaterialTheme.typography.titleMedium)
+                                            AnimatedContent(targetState = state.hasCustomKeybox, label = "keybox_actions") { hasKeybox ->
+                                                if (hasKeybox) {
+                                                    Button(
+                                                        onClick = { viewModel.deleteCustomPifFiles() },
+                                                        modifier = Modifier.fillMaxWidth().height(56.dp),
+                                                        colors = ButtonDefaults.buttonColors(
+                                                            containerColor = MaterialTheme.colorScheme.errorContainer,
+                                                            contentColor = MaterialTheme.colorScheme.onErrorContainer
+                                                        ),
+                                                        shape = RoundedCornerShape(12.dp)
+                                                    ) {
+                                                        Icon(Icons.Rounded.Delete, contentDescription = "Delete Custom Files", modifier = Modifier.size(20.dp))
+                                                        Spacer(Modifier.width(12.dp))
+                                                        Text("Delete", fontWeight = FontWeight.Bold, style = MaterialTheme.typography.titleMedium)
+                                                    }
+                                                } else {
+                                                    Button(
+                                                        onClick = { xmlImportLauncher.launch("*/*") },
+                                                        modifier = Modifier.fillMaxWidth().height(56.dp),
+                                                        colors = ButtonDefaults.buttonColors(
+                                                            containerColor = MaterialTheme.colorScheme.primaryContainer,
+                                                            contentColor = MaterialTheme.colorScheme.onPrimaryContainer
+                                                        ),
+                                                        shape = RoundedCornerShape(12.dp)
+                                                    ) {
+                                                        Icon(Icons.Rounded.UploadFile, contentDescription = null, modifier = Modifier.size(20.dp))
+                                                        Spacer(Modifier.width(12.dp))
+                                                        Text(stringResource(R.string.pif_import_keybox), fontWeight = FontWeight.Bold, style = MaterialTheme.typography.titleMedium)
+                                                    }
+                                                }
                                             }
 
                                             Spacer(Modifier.height(16.dp))

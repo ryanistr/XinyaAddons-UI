@@ -1,11 +1,16 @@
 package com.rianixia.settings.overlay.services.tiles
 
+import android.content.Intent
 import android.service.quicksettings.Tile
 import android.service.quicksettings.TileService
 import com.rianixia.settings.overlay.R
 
 class VSyncTileService : TileService() {
     private val propKey = "persist.sys.rianixia.display.vsync"
+
+    companion object {
+        const val ACTION_VSYNC_CHANGED = "com.rianixia.settings.VSYNC_STATE_CHANGED"
+    }
 
     override fun onStartListening() {
         super.onStartListening()
@@ -15,14 +20,15 @@ class VSyncTileService : TileService() {
     override fun onClick() {
         super.onClick()
         val currentState = getSystemProperty(propKey)
-        val newState = if (currentState == "1") "0" else "1"
+        val newState = if (currentState == "-1") "0" else "-1"
         setSystemProperty(propKey, newState)
         updateTileState()
+        sendBroadcast(Intent(ACTION_VSYNC_CHANGED))
     }
 
     private fun updateTileState() {
         val tile = qsTile ?: return
-        if (getSystemProperty(propKey) == "1") {
+        if (getSystemProperty(propKey) == "-1") {
             tile.state = Tile.STATE_ACTIVE
             tile.subtitle = getString(R.string.tile_enabled)
         } else {

@@ -1,11 +1,11 @@
 package com.rianixia.settings.overlay.ui.screens
 
 import android.util.Log
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import androidx.compose.animation.slideInHorizontally
-import androidx.compose.animation.slideOutHorizontally
+import android.widget.Toast
+import androidx.compose.animation.*
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.spring
+import androidx.compose.animation.core.Spring
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -13,15 +13,15 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.BrightnessLow
-import androidx.compose.material.icons.rounded.Check
-import androidx.compose.material.icons.rounded.DisplaySettings
-import androidx.compose.material.icons.rounded.Sync
+import androidx.compose.material.icons.rounded.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -45,7 +45,8 @@ fun ScreenDisplayScreen(
     val vSync by viewModel.vSyncEnabled.collectAsState()
     val resState by viewModel.resState.collectAsState()
     val extraDim by viewModel.extraDimEnabled.collectAsState()
-    
+
+    val context = LocalContext.current
     val hazeState = remember { HazeState() }
     
     var selectedResolution by remember { mutableStateOf<String?>(null) }
@@ -141,6 +142,15 @@ fun ScreenDisplayScreen(
                             }
                         }
                     }
+                }
+
+                item {
+                    NavRow(
+                        title = stringResource(R.string.sd_color_calibration_title),
+                        sub = stringResource(R.string.sd_color_calibration_desc),
+                        icon = Icons.Rounded.Palette,
+                        onClick = { navController.navigate("color_calibration") }
+                    )
                 }
                 
                 item {

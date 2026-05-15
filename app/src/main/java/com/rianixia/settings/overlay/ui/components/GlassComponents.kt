@@ -372,6 +372,7 @@ fun FloatingTopBar(
 fun MaterialGlassCard(
     modifier: Modifier = Modifier,
     header: String? = null,
+    headerTrailing: (@Composable () -> Unit)? = null,
     accentColor: Color? = null,
     containerColor: Color? = null,
     borderColor: Color? = null,
@@ -429,6 +430,11 @@ fun MaterialGlassCard(
                             fontWeight = FontWeight.SemiBold,
                             letterSpacing = 1.sp
                         )
+                        
+                        if (headerTrailing != null) {
+                            Spacer(Modifier.weight(1f))
+                            headerTrailing()
+                        }
                     }
                 }
                 content()

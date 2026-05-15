@@ -82,6 +82,7 @@ class IntegritySpoofViewModel(application: Application) : AndroidViewModel(appli
         const val PIF_MODE = "persist.sys.rianixia.pif.mode"
         const val PIF_AUTO_UPDATE = "persist.sys.rianixia.pif-auto"
         const val PIF_CUSTOM_UPDATE = "persist.sys.rianixia.pif.custom_update"
+        const val OEMPORTS_PIF_AUTOUPDATE = "persist.sys.oemports10t.utils.pif.autoupdate"
         
         const val PHOTOS_ENABLE = "persist.sys.rianixia.photos.unlimited"
         const val NETFLIX_ENABLE = "persist.sys.rianixia.netflix.unlock"
@@ -367,6 +368,7 @@ class IntegritySpoofViewModel(application: Application) : AndroidViewModel(appli
         if (_uiState.value.pifMode == mode) return
         _uiState.update { it.copy(pifMode = mode) }
         setSystemProp(Props.PIF_MODE, mode)
+        setSystemProp(Props.OEMPORTS_PIF_AUTOUPDATE, if (mode == "cloud") "true" else "false")
         
         viewModelScope.launch(Dispatchers.Main) {
             val msg = if (mode == "cloud") "Cloud Mode Selected" else "Custom Mode Selected"
@@ -436,6 +438,37 @@ class IntegritySpoofViewModel(application: Application) : AndroidViewModel(appli
                 }
             } finally {
                 _uiState.update { it.copy(isPifFetching = false) }
+            }
+        }
+    }
+
+    fun deleteCustomPifFiles() {
+        viewModelScope.launch(Dispatchers.IO) {
+            val pifJsonFile = File(getApplication<Application>().filesDir, "pif.json")
+            var deletedAny = false
+            
+            if (pifJsonFile.exists()) {
+                if (pifJsonFile.delete()) {
+                    deletedAny = true
+                    Log.d("IntegrityViewModel", "pif.json deleted successfully.")
+                }
+            }
+            
+            if (customKeyboxFile.exists()) {
+                if (customKeyboxFile.delete()) {
+                    deletedAny = true
+                    _uiState.update { it.copy(hasCustomKeybox = false) }
+                    setSystemProp(Props.PIF_CUSTOM_UPDATE, "0")
+                    Log.d("IntegrityViewModel", "keybox.xml deleted successfully.")
+                }
+            }
+
+            withContext(Dispatchers.Main) {
+                if (deletedAny) {
+                    Toast.makeText(getApplication(), "Custom PIF and Keybox files deleted", Toast.LENGTH_SHORT).show()
+                } else {
+                    Toast.makeText(getApplication(), "No custom files found to delete", Toast.LENGTH_SHORT).show()
+                }
             }
         }
     }
