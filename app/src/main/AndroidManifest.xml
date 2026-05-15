@@ -67,6 +67,11 @@
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
+        <receiver android:name=".services.SystemBootReceiver" android:enabled="true" android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
         <service android:name=".services.tiles.BypassChargingTileService" android:label="Bypass Charge" android:icon="@drawable/ic_qs_bypass" android:permission="android.permission.BIND_QUICK_SETTINGS_TILE" android:exported="true">
             <intent-filter>
                 <action android:name="android.service.quicksettings.action.QS_TILE" />
@@ -138,6 +143,11 @@
                 <action android:name="android.service.quicksettings.action.QS_TILE" />
             </intent-filter>
 
+        </service>
+        <service android:name=".services.tiles.EyeComfortTileService" android:label="@string/sd_eye_care_title" android:icon="@drawable/ic_qs_eyecomfort" android:permission="android.permission.BIND_QUICK_SETTINGS_TILE" android:exported="true">
+            <intent-filter>
+                <action android:name="android.service.quicksettings.action.QS_TILE" />
+            </intent-filter>
         </service>
         <receiver android:name=".OverlayService" android:exported="true">
             <intent-filter>

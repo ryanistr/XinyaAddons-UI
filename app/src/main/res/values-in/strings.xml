@@ -441,6 +441,19 @@
     <string name="sd_default_native">Bawaan (Asli)</string>
     <string name="sd_apply_resolution">Terapkan Resolusi</string>
 
+    <string name="sd_eye_care_title">Kenyamanan Mata</string>
+    <string name="sd_eye_care_desc">Bikin warna layar lebih hangat biar mata nggak gampang capek</string>
+    <string name="sd_eye_care_enable">Aktifkan Kenyamanan Mata</string>
+    <string name="sd_eye_care_schedule">Jadwal</string>
+    <string name="sd_eye_care_schedule_none">Mati</string>
+    <string name="sd_eye_care_schedule_always">Selalu Nyala</string>
+    <string name="sd_eye_care_schedule_custom">Jadwal Custom</string>
+    <string name="sd_eye_care_start_time">Waktu Mulai</string>
+    <string name="sd_eye_care_end_time">Waktu Selesai</string>
+    <string name="sd_eye_care_intensity">Intensitas Kehangatan</string>
+    <string name="sd_eye_care_toast_enabled">Kenyamanan Mata aktif</string>
+    <string name="sd_eye_care_toast_disabled">Kenyamanan Mata nonaktif</string>
+
     <string name="pif_fetching">Memperbarui...</string>
     <string name="pif_fetch_fingerprint">Perbarui Fingerprint</string>
 

@@ -150,16 +150,19 @@ class MainActivity : ComponentActivity() {
                                     ScreenDisplayScreen(navController = navController, viewModel = vm) 
                                 }
                                 composable("color_calibration") {
+                                   val vm: ScreenDisplayViewModel = viewModel()
+                                   ColorCalibrationScreen(navController = navController, viewModel = vm)
+                                }
+                                composable("eye_care") {
                                     val vm: ScreenDisplayViewModel = viewModel()
-                                    ColorCalibrationScreen(navController = navController, viewModel = vm)
+                                    EyeCareScreen(navController = navController, viewModel = vm)
                                 }
                                 composable("battery_center") { BatteryCenterScreen(navController) }
                                 composable("io_scheduler") { IoSchedulerScreen(navController) }
                                 composable("thermal_control") { ThermalControlScreen(navController) }
                                 composable("azenith") { AZenithScreen(navController) }
                                 composable("game_boost") { AZenithScreen(navController) }
-                                composable("integrity_spoofing") { IntegrityNSpoofingScreen(navController) }
-                                
+                                composable("integrity_spoofing") { IntegrityNSpoofingScreen(navController) }                                
                                 composable("about") { AboutScreen(navController) }
                                 composable("settings") { SettingsScreen(navController) }
                             }

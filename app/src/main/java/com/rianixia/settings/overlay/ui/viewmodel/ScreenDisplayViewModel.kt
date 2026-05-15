@@ -25,6 +25,7 @@ import kotlinx.coroutines.withContext
 import org.json.JSONObject
 import java.io.BufferedReader
 import java.io.InputStreamReader
+import java.util.Calendar
 
 data class ResolutionState(
     val currentRes: String = "Loading...",
@@ -49,6 +50,21 @@ class ScreenDisplayViewModel(application: Application) : AndroidViewModel(applic
 
     private val _extraDimIntensity = MutableStateFlow(0.5f)
     val extraDimIntensity: StateFlow<Float> = _extraDimIntensity
+
+    private val _eyeCareEnabled = MutableStateFlow(false)
+    val eyeCareEnabled: StateFlow<Boolean> = _eyeCareEnabled
+
+    private val _eyeCareIntensity = MutableStateFlow(0.5f)
+    val eyeCareIntensity: StateFlow<Float> = _eyeCareIntensity
+
+    private val _eyeCareSchedule = MutableStateFlow(0) // 0: Off, 1: Always, 2: Custom
+    val eyeCareSchedule: StateFlow<Int> = _eyeCareSchedule
+
+    private val _eyeCareStartTime = MutableStateFlow("18:00")
+    val eyeCareStartTime: StateFlow<String> = _eyeCareStartTime
+
+    private val _eyeCareEndTime = MutableStateFlow("07:00")
+    val eyeCareEndTime: StateFlow<String> = _eyeCareEndTime
 
     private val _redVal = MutableStateFlow(1000f)
     val redVal: StateFlow<Float> = _redVal.asStateFlow()
@@ -95,6 +111,58 @@ class ScreenDisplayViewModel(application: Application) : AndroidViewModel(applic
         fetchCurrentResolution()
         loadColorCalibration()
         loadPresets()
+        startEyeCareScheduler()
+    }
+
+    private fun startEyeCareScheduler() {
+        viewModelScope.launch(Dispatchers.Default) {
+            while (true) {
+                checkEyeCareSchedule()
+                delay(30000) // Check every 30 seconds for better responsiveness
+            }
+        }
+    }
+
+    private fun checkEyeCareSchedule() {
+        val schedule = _eyeCareSchedule.value
+        if (schedule == 0) {
+            if (_eyeCareEnabled.value) {
+                _eyeCareEnabled.value = false
+                applyColorCalibration()
+            }
+            return
+        }
+
+        if (schedule == 1) {
+            if (!_eyeCareEnabled.value) {
+                _eyeCareEnabled.value = true
+                applyColorCalibration()
+            }
+            return
+        }
+
+        if (schedule == 2) {
+            val now = Calendar.getInstance()
+            val currentMinutes = now.get(Calendar.HOUR_OF_DAY) * 60 + now.get(Calendar.MINUTE)
+            
+            val startParts = _eyeCareStartTime.value.split(":").map { it.toIntOrNull() ?: 0 }
+            val endParts = _eyeCareEndTime.value.split(":").map { it.toIntOrNull() ?: 0 }
+            if (startParts.size < 2 || endParts.size < 2) return
+            
+            val startMinutes = startParts[0] * 60 + startParts[1]
+            val endMinutes = endParts[0] * 60 + endParts[1]
+
+            val isActive = if (startMinutes < endMinutes) {
+                currentMinutes in startMinutes until endMinutes
+            } else {
+                currentMinutes >= startMinutes || currentMinutes < endMinutes
+            }
+
+            if (_eyeCareEnabled.value != isActive) {
+                _eyeCareEnabled.value = isActive
+                applyColorCalibration()
+            }
+        }
     }
 
     private fun loadPresets() {
@@ -104,8 +172,25 @@ class ScreenDisplayViewModel(application: Application) : AndroidViewModel(applic
 
     fun savePreset(name: String) {
         val prefs = getApplication<Application>().getSharedPreferences("color_presets", Context.MODE_PRIVATE)
+        val finalName = if (name.isBlank()) {
+            var i = 1
+            while (prefs.contains("Preset $i")) {
+                i++
+            }
+            "Preset $i"
+        } else {
+            name
+        }
         val config = "${_redVal.value.toInt()} ${_greenVal.value.toInt()} ${_blueVal.value.toInt()} ${_saturationVal.value.toInt()} ${_colorTemperature.value.toInt()}"
-        prefs.edit().putString(name, config).apply()
+        prefs.edit().putString(finalName, config).apply()
+        loadPresets()
+    }
+
+    fun renamePreset(oldName: String, newName: String) {
+        if (oldName == newName || newName.isBlank()) return
+        val prefs = getApplication<Application>().getSharedPreferences("color_presets", Context.MODE_PRIVATE)
+        val config = prefs.getString(oldName, null) ?: return
+        prefs.edit().remove(oldName).putString(newName, config).apply()
         loadPresets()
     }
 
@@ -202,18 +287,21 @@ class ScreenDisplayViewModel(application: Application) : AndroidViewModel(applic
 
     private fun loadColorCalibration() {
         viewModelScope.launch(Dispatchers.IO) {
-            val config = getSystemProperty("persist.sys.rianixia.display.schemeconfig", "1000 1000 1000 1000 1000")
-            val parts = config.split(" ").mapNotNull { it.toFloatOrNull() }
+            val config = getSystemProperty("persist.sys.rianixia.display.schemeconfig", "1000 1000 1000 1000 1000 0.5 0 18:00 07:00")
+            val parts = config.split(" ")
             if (parts.size >= 4) {
                 withContext(Dispatchers.Main) {
-                    _redVal.value = parts[0]
-                    _greenVal.value = parts[1]
-                    _blueVal.value = parts[2]
-                    _saturationVal.value = parts[3]
-                    if (parts.size >= 5) {
-                        _colorTemperature.value = parts[4]
-                    }
+                    _redVal.value = parts[0].toFloatOrNull() ?: 1000f
+                    _greenVal.value = parts[1].toFloatOrNull() ?: 1000f
+                    _blueVal.value = parts[2].toFloatOrNull() ?: 1000f
+                    _saturationVal.value = parts[3].toFloatOrNull() ?: 1000f
+                    if (parts.size >= 5) _colorTemperature.value = parts[4].toFloatOrNull() ?: 1000f
+                    if (parts.size >= 6) _eyeCareIntensity.value = parts[5].toFloatOrNull() ?: 0.5f
+                    if (parts.size >= 7) _eyeCareSchedule.value = parts[6].toIntOrNull() ?: 0
+                    if (parts.size >= 8) _eyeCareStartTime.value = parts[7]
+                    if (parts.size >= 9) _eyeCareEndTime.value = parts[8]
                     
+                    checkEyeCareSchedule()
                     applyColorCalibration()
                     applySaturation()
                 }
@@ -223,7 +311,7 @@ class ScreenDisplayViewModel(application: Application) : AndroidViewModel(applic
 
     private fun saveColorCalibration() {
         viewModelScope.launch(Dispatchers.IO) {
-            val config = "${_redVal.value.toInt()} ${_greenVal.value.toInt()} ${_blueVal.value.toInt()} ${_saturationVal.value.toInt()} ${_colorTemperature.value.toInt()}"
+            val config = "${_redVal.value.toInt()} ${_greenVal.value.toInt()} ${_blueVal.value.toInt()} ${_saturationVal.value.toInt()} ${_colorTemperature.value.toInt()} ${_eyeCareIntensity.value} ${_eyeCareSchedule.value} ${_eyeCareStartTime.value} ${_eyeCareEndTime.value}"
             setSystemProperty("persist.sys.rianixia.display.schemeconfig", config)
         }
     }
@@ -271,6 +359,13 @@ class ScreenDisplayViewModel(application: Application) : AndroidViewModel(applic
         } else if (tempFactor > 0) { // Cold: Blue up, Red down
             b += (tempFactor * 0.15f)
             r -= (tempFactor * 0.15f)
+        }
+
+        // Apply Eye Care Warmth if enabled
+        if (_eyeCareEnabled.value) {
+            val eyeCareFactor = _eyeCareIntensity.value * 0.4f // Max 0.4 additional warmth
+            r += eyeCareFactor
+            b -= eyeCareFactor
         }
         
         r = r.coerceIn(0f, 2f)
@@ -506,4 +601,39 @@ class ScreenDisplayViewModel(application: Application) : AndroidViewModel(applic
 
     fun setColorTemperature(temp: Float) { _colorTemperature.value = temp }
     fun setFpsLock(fps: Int) { _fpsLock.value = fps }
+
+    fun toggleEyeCare(enabled: Boolean) {
+        if (!enabled) {
+            _eyeCareSchedule.value = 0
+            _eyeCareEnabled.value = false
+        } else {
+            if (_eyeCareSchedule.value == 0) {
+                _eyeCareSchedule.value = 1
+                _eyeCareEnabled.value = true
+            }
+        }
+        applyColorCalibration()
+        saveColorCalibration()
+    }
+
+    fun setEyeCareIntensity(intensity: Float) {
+        _eyeCareIntensity.value = intensity
+        if (_eyeCareEnabled.value) {
+            applyColorCalibration()
+        }
+        saveColorCalibration()
+    }
+
+    fun setEyeCareSchedule(schedule: Int) {
+        _eyeCareSchedule.value = schedule
+        checkEyeCareSchedule()
+        saveColorCalibration()
+    }
+
+    fun setEyeCareTime(start: String? = null, end: String? = null) {
+        start?.let { _eyeCareStartTime.value = it }
+        end?.let { _eyeCareEndTime.value = it }
+        checkEyeCareSchedule()
+        saveColorCalibration()
+    }
 }

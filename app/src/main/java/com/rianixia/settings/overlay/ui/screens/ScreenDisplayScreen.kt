@@ -100,60 +100,6 @@ fun ScreenDisplayScreen(
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 item {
-                    MaterialGlassCard(header = stringResource(R.string.sd_display_matrix)) {
-                        XinyaToggle(
-                            title = stringResource(R.string.sd_vsync_title),
-                            subtitle = stringResource(R.string.sd_vsync_desc),
-                            icon = Icons.Rounded.Sync,
-                            checked = vSync,
-                            onCheckedChange = { viewModel.toggleVSync(it) },
-                            iconTint = MaterialTheme.colorScheme.tertiary
-                        )
-                        MaterialDivider()
-                        Column {
-                            XinyaToggle(
-                                title = stringResource(R.string.sd_extra_dim_title),
-                                subtitle = stringResource(R.string.sd_extra_dim_desc),
-                                icon = Icons.Rounded.BrightnessLow,
-                                checked = extraDim,
-                                onCheckedChange = { viewModel.toggleExtraDim(it) },
-                                iconTint = MaterialTheme.colorScheme.secondary
-                            )
-                            AnimatedVisibility(visible = extraDim) {
-                                val intensity by viewModel.extraDimIntensity.collectAsState()
-                                Column(modifier = Modifier.padding(top = 16.dp, start = 16.dp, end = 16.dp)) {
-                                    Row(
-                                        modifier = Modifier.fillMaxWidth(),
-                                        horizontalArrangement = Arrangement.SpaceBetween
-                                    ) {
-                                        Text(stringResource(R.string.sd_dim_intensity), style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
-                                        Text("${(intensity * 100).toInt()}%", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.primary, fontWeight = FontWeight.Bold)
-                                    }
-                                    Slider(
-                                        value = intensity,
-                                        onValueChange = { viewModel.setExtraDimIntensity(it) },
-                                        valueRange = 0f..0.9f,
-                                        colors = SliderDefaults.colors(
-                                            thumbColor = MaterialTheme.colorScheme.primary,
-                                            activeTrackColor = MaterialTheme.colorScheme.primary
-                                        )
-                                    )
-                                }
-                            }
-                        }
-                    }
-                }
-
-                item {
-                    NavRow(
-                        title = stringResource(R.string.sd_color_calibration_title),
-                        sub = stringResource(R.string.sd_color_calibration_desc),
-                        icon = Icons.Rounded.Palette,
-                        onClick = { navController.navigate("color_calibration") }
-                    )
-                }
-                
-                item {
                     MaterialGlassCard(header = stringResource(R.string.sd_render_res_target)) {
                         Row(
                             verticalAlignment = Alignment.CenterVertically,
@@ -214,6 +160,37 @@ fun ScreenDisplayScreen(
                         }
                     }
                 }
+
+                item {
+                    MaterialGlassCard(header = stringResource(R.string.sd_display_matrix)) {
+                        XinyaToggle(
+                            title = stringResource(R.string.sd_vsync_title),
+                            subtitle = stringResource(R.string.sd_vsync_desc),
+                            icon = Icons.Rounded.Sync,
+                            checked = vSync,
+                            onCheckedChange = { viewModel.toggleVSync(it) },
+                            iconTint = MaterialTheme.colorScheme.tertiary
+                        )
+                    }
+                }
+
+                item {
+                    NavRow(
+                        title = stringResource(R.string.sd_eye_care_title),
+                        sub = stringResource(R.string.sd_eye_care_desc),
+                        icon = Icons.Rounded.Visibility,
+                        onClick = { navController.navigate("eye_care") }
+                    )
+                }
+
+                item {
+                    NavRow(
+                        title = stringResource(R.string.sd_color_calibration_title),
+                        sub = stringResource(R.string.sd_color_calibration_desc),
+                        icon = Icons.Rounded.Palette,
+                        onClick = { navController.navigate("color_calibration") }
+                    )
+                }
             }
             
             GradientBlurAppBar(
@@ -229,10 +206,10 @@ fun ScreenDisplayScreen(
             val showFab = selectedResolution != null && selectedResolution != resState.currentRes && !isDefaultRedundant
             AnimatedVisibility(
                 visible = showFab,
-                enter = fadeIn() + slideInHorizontally { -it },
-                exit = fadeOut() + slideOutHorizontally { -it },
+                enter = fadeIn() + slideInHorizontally { it },
+                exit = fadeOut() + slideOutHorizontally { it },
                 modifier = Modifier
-                    .align(Alignment.BottomStart)
+                    .align(Alignment.BottomEnd)
                     .padding(24.dp)
             ) {
                 FloatingActionButton(

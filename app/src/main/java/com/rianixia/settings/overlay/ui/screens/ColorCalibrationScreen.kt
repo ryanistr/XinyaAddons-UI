@@ -56,6 +56,7 @@ fun ColorCalibrationScreen(
     val hazeState = remember { HazeState() }
     
     var showSaveDialog by remember { mutableStateOf(false) }
+    var showRenameDialog by remember { mutableStateOf<String?>(null) }
     var showManualInputDialog by remember { mutableStateOf<Pair<String, Float>?>(null) }
     var presetNameInput by remember { mutableStateOf("") }
 
@@ -120,6 +121,10 @@ fun ColorCalibrationScreen(
                                         },
                                         onExport = {
                                             viewModel.exportPresetToFile(context, name)
+                                        },
+                                        onRename = {
+                                            showRenameDialog = name
+                                            presetNameInput = name
                                         }
                                     )
                                 }
@@ -182,19 +187,7 @@ fun ColorCalibrationScreen(
                 // RGB and Saturation Card (Now Bottom)
                 item {
                     MaterialGlassCard(
-                        header = stringResource(R.string.sd_color_calibration_title),
-                        headerTrailing = {
-                            IconButton(onClick = {
-                                viewModel.resetColorCalibration()
-                                Toast.makeText(context, context.getString(R.string.sd_color_reset_toast), Toast.LENGTH_SHORT).show()
-                            }) {
-                                Icon(
-                                    imageVector = Icons.Rounded.Refresh,
-                                    contentDescription = stringResource(R.string.sd_color_reset),
-                                    tint = MaterialTheme.colorScheme.onSurface
-                                )
-                            }
-                        }
+                        header = stringResource(R.string.sd_color_calibration_title)
                     ) {
                         Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                             ColorSliderItem(
@@ -246,6 +239,24 @@ fun ColorCalibrationScreen(
                 modifier = Modifier.align(Alignment.TopCenter),
                 addStatusBarPadding = true
             )
+
+            // Reset FAB
+            FloatingActionButton(
+                onClick = {
+                    viewModel.resetColorCalibration()
+                    Toast.makeText(context, context.getString(R.string.sd_color_reset_toast), Toast.LENGTH_SHORT).show()
+                },
+                modifier = Modifier
+                    .align(Alignment.BottomEnd)
+                    .padding(24.dp),
+                containerColor = MaterialTheme.colorScheme.primary,
+                contentColor = MaterialTheme.colorScheme.onPrimary
+            ) {
+                Icon(
+                    imageVector = Icons.Rounded.Refresh,
+                    contentDescription = stringResource(R.string.sd_color_reset)
+                )
+            }
         }
     }
 
@@ -266,12 +277,10 @@ fun ColorCalibrationScreen(
             confirmButton = {
                 Button(
                     onClick = {
-                        if (presetNameInput.isNotBlank()) {
-                            viewModel.savePreset(presetNameInput)
-                            presetNameInput = ""
-                            showSaveDialog = false
-                            Toast.makeText(context, context.getString(R.string.sd_color_preset_saved), Toast.LENGTH_SHORT).show()
-                        }
+                        viewModel.savePreset(presetNameInput)
+                        presetNameInput = ""
+                        showSaveDialog = false
+                        Toast.makeText(context, context.getString(R.string.sd_color_preset_saved), Toast.LENGTH_SHORT).show()
                     }
                 ) {
                     Text(stringResource(R.string.btn_save))
@@ -279,6 +288,41 @@ fun ColorCalibrationScreen(
             },
             dismissButton = {
                 TextButton(onClick = { showSaveDialog = false }) {
+                    Text(stringResource(R.string.btn_cancel))
+                }
+            }
+        )
+    }
+
+    // Rename Preset Dialog
+    showRenameDialog?.let { oldName ->
+        AlertDialog(
+            onDismissRequest = { showRenameDialog = null },
+            title = { Text(stringResource(R.string.btn_change)) },
+            text = {
+                OutlinedTextField(
+                    value = presetNameInput,
+                    onValueChange = { presetNameInput = it },
+                    label = { Text(stringResource(R.string.sd_color_preset_name)) },
+                    singleLine = true,
+                    modifier = Modifier.fillMaxWidth()
+                )
+            },
+            confirmButton = {
+                Button(
+                    onClick = {
+                        if (presetNameInput.isNotBlank()) {
+                            viewModel.renamePreset(oldName, presetNameInput)
+                            presetNameInput = ""
+                            showRenameDialog = null
+                        }
+                    }
+                ) {
+                    Text(stringResource(R.string.btn_save))
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { showRenameDialog = null }) {
                     Text(stringResource(R.string.btn_cancel))
                 }
             }
@@ -317,7 +361,7 @@ fun ColorCalibrationScreen(
                         showManualInputDialog = null
                     }
                 ) {
-                    Text(stringResource(R.string.sd_apply_resolution))
+                    Text(stringResource(R.string.btn_save))
                 }
             },
             dismissButton = {
@@ -334,7 +378,8 @@ fun PresetItem(
     name: String,
     onLoad: () -> Unit,
     onDelete: () -> Unit,
-    onExport: () -> Unit
+    onExport: () -> Unit,
+    onRename: () -> Unit
 ) {
     Row(
         modifier = Modifier
@@ -354,6 +399,9 @@ fun PresetItem(
             fontWeight = FontWeight.Bold,
             color = MaterialTheme.colorScheme.onSurface
         )
+        IconButton(onClick = onRename) {
+            Icon(Icons.Rounded.Edit, null, tint = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f), modifier = Modifier.size(20.dp))
+        }
         IconButton(onClick = onExport) {
             Icon(Icons.Rounded.Download, null, tint = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f), modifier = Modifier.size(20.dp))
         }

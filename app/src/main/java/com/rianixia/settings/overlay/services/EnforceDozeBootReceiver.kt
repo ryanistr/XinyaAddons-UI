@@ -17,7 +17,6 @@ class EnforceDozeBootReceiver : BroadcastReceiver() {
                 
                 val serviceIntent = Intent(context, EnforceDozeService::class.java)
                 
-                // Foreground services must be started appropriately on Oreo+
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                     context.startForegroundService(serviceIntent)
                 } else {

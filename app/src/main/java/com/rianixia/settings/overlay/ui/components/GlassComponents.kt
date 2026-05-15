@@ -593,7 +593,7 @@ fun XinyaToggle(
         Switch(
             checked = checked, onCheckedChange = onCheckedChange,
             colors = SwitchDefaults.colors(
-                checkedThumbColor = Color.White,
+                checkedThumbColor = colorScheme.surface,
                 checkedTrackColor = accent,
                 checkedBorderColor = Color.Transparent,
                 uncheckedThumbColor = colorScheme.outline,

@@ -429,7 +429,7 @@
     <string name="sd_confirm_res_desc">Do you want to keep the new screen resolution? Reverting to previous state in %1$d seconds.</string>
     <string name="sd_keep_changes">Keep Changes</string>
     <string name="sd_revert">Revert</string>
-    <string name="sd_display_matrix">Display Matrix</string>
+    <string name="sd_display_matrix">Display Config</string>
     <string name="sd_vsync_title">VSync</string>
     <string name="sd_vsync_desc">Synchronize frame rates to prevent screen tearing. Disabling may improve performance and touch responsiveness at the cost of potential visual artifacts.</string>
     <string name="sd_extra_dim_title">Extra Dim Mode</string>
@@ -440,6 +440,19 @@
     <string name="sd_select_resolution">Select Resolution</string>
     <string name="sd_default_native">Default (Native)</string>
     <string name="sd_apply_resolution">Apply Resolution</string>
+
+    <string name="sd_eye_care_title">Eye Comfort</string>
+    <string name="sd_eye_care_desc">Make screen colors warmer to reduce eye strain</string>
+    <string name="sd_eye_care_enable">Enable Eye Comfort</string>
+    <string name="sd_eye_care_schedule">Schedule</string>
+    <string name="sd_eye_care_schedule_none">None</string>
+    <string name="sd_eye_care_schedule_always">Always On</string>
+    <string name="sd_eye_care_schedule_custom">Scheduled Time</string>
+    <string name="sd_eye_care_start_time">Start Time</string>
+    <string name="sd_eye_care_end_time">End Time</string>
+    <string name="sd_eye_care_intensity">Warmth Intensity</string>
+    <string name="sd_eye_care_toast_enabled">Eye Comfort enabled</string>
+    <string name="sd_eye_care_toast_disabled">Eye Comfort disabled</string>
 
     <string name="sd_color_calibration_title">Color Calibration</string>
     <string name="sd_color_calibration_desc">Adjust screen color temperature and saturation</string>
