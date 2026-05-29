@@ -57,6 +57,14 @@
             </intent-filter>
         </activity-alias>
 
+        <activity android:name=".ui.screens.FlashlightMenuActivity" android:theme="@android:style/Theme.Translucent.NoTitleBar" android:exported="false" android:excludeFromRecents="true" android:launchMode="singleInstance" android:showWhenLocked="true" android:turnScreenOn="true" />
+
+        <service android:name=".services.tiles.FlashlightTileService" android:label="Flashlight Control" android:icon="@drawable/ic_qs_flashlight" android:permission="android.permission.BIND_QUICK_SETTINGS_TILE" android:exported="true">
+            <intent-filter>
+                <action android:name="android.service.quicksettings.action.QS_TILE" />
+            </intent-filter>
+        </service>
+
         <service android:name=".services.ExtraDimService" android:exported="false" />
 
         <service android:name=".services.EnforceDozeService" android:enabled="true" android:exported="false" android:foregroundServiceType="specialUse">

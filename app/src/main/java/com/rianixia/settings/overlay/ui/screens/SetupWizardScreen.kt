@@ -39,8 +39,9 @@ import com.rianixia.settings.overlay.data.AppPreferences
 import com.rianixia.settings.overlay.ui.components.MaterialGlassScaffold
 import com.rianixia.settings.overlay.ui.components.frostedGlass
 import dev.chrisbanes.haze.HazeState
+import dev.chrisbanes.haze.HazeStyle
+import dev.chrisbanes.haze.HazeTint
 import dev.chrisbanes.haze.haze
-// [FIXED] Removed deprecated hazeChild import if unused, or replaced usage below
 import dev.chrisbanes.haze.hazeEffect
 import dev.chrisbanes.haze.hazeSource
 import kotlinx.coroutines.Dispatchers
@@ -164,10 +165,14 @@ fun SetupWizardScreen(navController: NavController) {
                     .align(Alignment.BottomCenter)
                     .fillMaxWidth()
                     .clip(RoundedCornerShape(topStart = 32.dp, topEnd = 32.dp))
-                    // [FIXED] hazeChild -> hazeEffect
-                    .hazeEffect(state = hazeState)
-                    .background(
-                        MaterialTheme.colorScheme.surface.copy(alpha = 0.7f)
+                    .hazeEffect(
+                        state = hazeState,
+                        style = HazeStyle(
+                            backgroundColor = MaterialTheme.colorScheme.surface,
+                            blurRadius = 24.dp,
+                            tint = HazeTint(MaterialTheme.colorScheme.surface.copy(alpha = 0.7f)),
+                            noiseFactor = 0.05f
+                        )
                     )
                     .padding(horizontal = 24.dp, vertical = 20.dp)
             ) {

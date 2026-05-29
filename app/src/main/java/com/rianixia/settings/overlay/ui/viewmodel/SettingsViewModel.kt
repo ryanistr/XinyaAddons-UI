@@ -12,7 +12,8 @@ import kotlinx.coroutines.launch
 
 data class AppSettingsState(
     val isLauncherIconEnabled: Boolean = false,
-    val isSafetyModeEnabled: Boolean = true
+    val isSafetyModeEnabled: Boolean = true,
+    val flashlightQsMode: Int = 0
 )
 
 class SettingsViewModel(application: Application) : AndroidViewModel(application) {
@@ -31,11 +32,13 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
             // Fetch states from the centralized AppPreferences
             val isIconEnabled = AppPreferences.getLauncherIconState(context)
             val isSafetyEnabled = AppPreferences.getSafetyMode()
+            val flashQsMode = AppPreferences.getFlashlightQsMode(context)
 
             _uiState.update { 
                 it.copy(
                     isLauncherIconEnabled = isIconEnabled,
-                    isSafetyModeEnabled = isSafetyEnabled
+                    isSafetyModeEnabled = isSafetyEnabled,
+                    flashlightQsMode = flashQsMode
                 ) 
             }
         }
@@ -52,6 +55,13 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
         viewModelScope.launch(Dispatchers.IO) {
             AppPreferences.setSafetyMode(enabled)
             _uiState.update { it.copy(isSafetyModeEnabled = enabled) }
+        }
+    }
+
+    fun setFlashlightQsMode(mode: Int) {
+        viewModelScope.launch(Dispatchers.IO) {
+            AppPreferences.setFlashlightQsMode(getApplication(), mode)
+            _uiState.update { it.copy(flashlightQsMode = mode) }
         }
     }
 }

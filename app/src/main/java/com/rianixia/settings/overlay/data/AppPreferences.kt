@@ -17,6 +17,20 @@ object AppPreferences {
     private const val PROP_SAFETY_MODE = "persist.sys.rianixia.safe_mode_state"
     private const val LAUNCHER_ALIAS = "com.rianixia.settings.overlay.Launcher"
 
+    private const val KEY_FLASHLIGHT_QS_MODE = "flashlight_qs_mode"
+
+    // --- Flashlight ---
+    fun getFlashlightQsMode(context: Context): Int {
+        return context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+            .getInt(KEY_FLASHLIGHT_QS_MODE, 0)
+    }
+
+    fun setFlashlightQsMode(context: Context, mode: Int) {
+        context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE).edit()
+            .putInt(KEY_FLASHLIGHT_QS_MODE, mode)
+            .apply()
+    }
+
     // --- First Run ---
     fun isFirstRun(context: Context): Boolean {
         return context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)

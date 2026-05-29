@@ -31,6 +31,8 @@ import androidx.navigation.NavController
 import com.rianixia.settings.overlay.R
 import com.rianixia.settings.overlay.ui.components.*
 import com.rianixia.settings.overlay.ui.viewmodel.SystemViewModel
+import dev.chrisbanes.haze.HazeState
+import dev.chrisbanes.haze.hazeSource
 
 @Composable
 fun SystemScreen(
@@ -38,88 +40,101 @@ fun SystemScreen(
     viewModel: SystemViewModel = viewModel()
 ) {
     val state by viewModel.uiState.collectAsState()
+    val hazeState = remember { HazeState() }
 
     MaterialGlassScaffold {
-        BouncyLazyColumn(
-            modifier = Modifier.fillMaxSize(),
-            contentPadding = PaddingValues(top = 100.dp, bottom = 120.dp, start = 16.dp, end = 16.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp)
-        ) {
-            item {
-                Column(Modifier.padding(start = 8.dp, bottom = 8.dp)) {
-                    Text(
-                        stringResource(R.string.system_core),
-                        style = MaterialTheme.typography.labelMedium,
-                        color = MaterialTheme.colorScheme.primary,
-                        fontWeight = FontWeight.Black,
-                        letterSpacing = 2.sp
-                    )
-                    Text(
-                        stringResource(R.string.hardware_matrix),
-                        style = MaterialTheme.typography.headlineMedium,
-                        fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colorScheme.onBackground
-                    )
+        Box(modifier = Modifier.fillMaxSize()) {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .hazeSource(state = hazeState)
+            ) {
+                BouncyLazyColumn(
+                    modifier = Modifier.fillMaxSize(),
+                    contentPadding = PaddingValues(top = 100.dp, bottom = 120.dp, start = 16.dp, end = 16.dp),
+                    verticalArrangement = Arrangement.spacedBy(16.dp)
+                ) {
+                    item {
+                        Column(Modifier.padding(start = 8.dp, bottom = 8.dp)) {
+                            Text(
+                                stringResource(R.string.system_core),
+                                style = MaterialTheme.typography.labelMedium,
+                                color = MaterialTheme.colorScheme.primary,
+                                fontWeight = FontWeight.Black,
+                                letterSpacing = 2.sp
+                            )
+                            Text(
+                                stringResource(R.string.hardware_matrix),
+                                style = MaterialTheme.typography.headlineMedium,
+                                fontWeight = FontWeight.Bold,
+                                color = MaterialTheme.colorScheme.onBackground
+                            )
+                        }
+                    }
+
+                    item {
+                        IdentityMatrixCard(onClick = { navController.navigate("integrity_spoofing") })
+                    }
+
+                    item {
+                        Row(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
+                            SystemModuleCard(
+                                modifier = Modifier.weight(1f),
+                                label = stringResource(R.string.vis_fx),
+                                title = stringResource(R.string.halo_light),
+                                icon = Icons.Rounded.Stream,
+                                color = MaterialTheme.colorScheme.tertiary,
+                                onClick = { navController.navigate("halo_lighting") }
+                            )
+                            SystemModuleCard(
+                                modifier = Modifier.weight(1f),
+                                label = stringResource(R.string.disp_cfg),
+                                title = stringResource(R.string.resolution),
+                                icon = Icons.Rounded.DisplaySettings,
+                                color = MaterialTheme.colorScheme.secondary,
+                                onClick = { navController.navigate("screen_reso") }
+                            )
+                        }
+                    }
+
+                    item {
+                        Row(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
+                            SystemModuleCard(
+                                modifier = Modifier.weight(1f),
+                                label = stringResource(R.string.hw_therm),
+                                title = stringResource(R.string.thermal),
+                                icon = Icons.Rounded.Whatshot,
+                                color = MaterialTheme.colorScheme.error,
+                                onClick = { navController.navigate("thermal_control") }
+                            )
+                            SystemModuleCard(
+                                modifier = Modifier.weight(1f),
+                                label = stringResource(R.string.pwr_src),
+                                title = stringResource(R.string.battery),
+                                icon = Icons.Rounded.BatteryStd,
+                                color = MaterialTheme.colorScheme.primary,
+                                onClick = { navController.navigate("battery_center") }
+                            )
+                        }
+                    }
+
+                    item {
+                        SystemPropsBank(
+                            isFlagSecureDisabled = state.isFlagSecureDisabled,
+                            isRotationButtonHidden = state.isRotationButtonHidden,
+                            flashlightQsMode = state.flashlightQsMode,
+                            onToggleSecure = { viewModel.toggleFlagSecure(it) },
+                            onToggleRotation = { viewModel.toggleRotationButton(it) },
+                            onFlashlightQsModeChange = { viewModel.setFlashlightQsMode(it) },
+                            hazeState = hazeState
+                        )
+                    }
                 }
-            }
-
-            item {
-                IdentityMatrixCard(onClick = { navController.navigate("integrity_spoofing") })
-            }
-
-            item {
-                Row(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
-                    SystemModuleCard(
-                        modifier = Modifier.weight(1f),
-                        label = stringResource(R.string.vis_fx),
-                        title = stringResource(R.string.halo_light),
-                        icon = Icons.Rounded.Stream,
-                        color = MaterialTheme.colorScheme.tertiary,
-                        onClick = { navController.navigate("halo_lighting") }
-                    )
-                    SystemModuleCard(
-                        modifier = Modifier.weight(1f),
-                        label = stringResource(R.string.disp_cfg),
-                        title = stringResource(R.string.resolution),
-                        icon = Icons.Rounded.DisplaySettings,
-                        color = MaterialTheme.colorScheme.secondary,
-                        onClick = { navController.navigate("screen_reso") }
-                    )
-                }
-            }
-
-            item {
-                Row(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
-                    SystemModuleCard(
-                        modifier = Modifier.weight(1f),
-                        label = stringResource(R.string.hw_therm),
-                        title = stringResource(R.string.thermal),
-                        icon = Icons.Rounded.Whatshot,
-                        color = MaterialTheme.colorScheme.error,
-                        onClick = { navController.navigate("thermal_control") }
-                    )
-                    SystemModuleCard(
-                        modifier = Modifier.weight(1f),
-                        label = stringResource(R.string.pwr_src),
-                        title = stringResource(R.string.battery),
-                        icon = Icons.Rounded.BatteryStd,
-                        color = MaterialTheme.colorScheme.primary,
-                        onClick = { navController.navigate("battery_center") }
-                    )
-                }
-            }
-
-            item {
-                SystemPropsBank(
-                    isFlagSecureDisabled = state.isFlagSecureDisabled,
-                    isRotationButtonHidden = state.isRotationButtonHidden,
-                    onToggleSecure = { viewModel.toggleFlagSecure(it) },
-                    onToggleRotation = { viewModel.toggleRotationButton(it) }
-                )
             }
         }
     }
 }
+
 @Composable
 fun IdentityMatrixCard(onClick: () -> Unit) {
     val color = MaterialTheme.colorScheme.primary
@@ -228,7 +243,7 @@ fun SystemModuleCard(
                 Text(label, style = MaterialTheme.typography.labelSmall, fontWeight = FontWeight.Bold, color = color.copy(alpha = 0.8f))
                 Icon(icon, null, tint = color, modifier = Modifier.size(20.dp))
             }
-            
+
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically,
@@ -245,8 +260,11 @@ fun SystemModuleCard(
 fun SystemPropsBank(
     isFlagSecureDisabled: Boolean,
     isRotationButtonHidden: Boolean,
+    flashlightQsMode: Int,
     onToggleSecure: (Boolean) -> Unit,
-    onToggleRotation: (Boolean) -> Unit
+    onToggleRotation: (Boolean) -> Unit,
+    onFlashlightQsModeChange: (Int) -> Unit,
+    hazeState: HazeState
 ) {
     MaterialGlassCard(
         header = stringResource(R.string.sys_tuner_title)
@@ -259,9 +277,9 @@ fun SystemPropsBank(
             onCheckedChange = onToggleSecure,
             isRisk = true
         )
-        
+
         MaterialDivider()
-        
+
         XinyaToggle(
             title = stringResource(R.string.sys_rotation_title),
             subtitle = stringResource(R.string.sys_rotation_desc),
@@ -269,5 +287,50 @@ fun SystemPropsBank(
             checked = isRotationButtonHidden,
             onCheckedChange = onToggleRotation
         )
+
+        MaterialDivider()
+
+        val qsModes = listOf("Open Menu", "Toggle Front", "Toggle Back", "Toggle 360")
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp, vertical = 12.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Box(
+                modifier = Modifier
+                    .size(40.dp)
+                    .clip(CircleShape)
+                    .background(MaterialTheme.colorScheme.secondaryContainer),
+                contentAlignment = Alignment.Center
+            ) {
+                Icon(Icons.Rounded.FlashlightOn, null, tint = MaterialTheme.colorScheme.onSecondaryContainer)
+            }
+
+            Spacer(Modifier.width(16.dp))
+
+            Column(modifier = Modifier.weight(1f)) {
+                Text(
+                    text = "Flashlight QS Action", 
+                    style = MaterialTheme.typography.titleMedium, 
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.onSurface
+                )
+                Text("Action when Quick Settings tile is tapped", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+
+                Spacer(Modifier.height(8.dp))
+
+                GlassDropdown(
+                    label = "",
+                    options = qsModes,
+                    selectedOption = qsModes[flashlightQsMode.coerceIn(0, 3)],
+                    onOptionSelected = { option ->
+                        onFlashlightQsModeChange(qsModes.indexOf(option))
+                    },
+                    color = MaterialTheme.colorScheme.primary,
+                    hazeState = hazeState
+                )
+            }
+        }
     }
 }

@@ -10,12 +10,14 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import com.rianixia.settings.overlay.data.AppPreferences
 import java.io.BufferedReader
 import java.io.InputStreamReader
 
 data class SystemTunerState(
     val isFlagSecureDisabled: Boolean = false,
-    val isRotationButtonHidden: Boolean = false
+    val isRotationButtonHidden: Boolean = false,
+    val flashlightQsMode: Int = 0
 )
 
 class SystemViewModel(application: Application) : AndroidViewModel(application) {
@@ -57,13 +59,16 @@ class SystemViewModel(application: Application) : AndroidViewModel(application) 
             // Value 0 means Hidden. Value 1 means Shown.
             val rotationHidden = rotationValue == 0
             
+            val flashQsMode = AppPreferences.getFlashlightQsMode(getApplication<Application>())
+
             _uiState.update { 
                 it.copy(
                     isFlagSecureDisabled = secure, 
-                    isRotationButtonHidden = rotationHidden
+                    isRotationButtonHidden = rotationHidden,
+                    flashlightQsMode = flashQsMode
                 ) 
             }
-            Log.i(TAG, "loadState: Updated. SecureDisabled=$secure, RotationHidden=$rotationHidden")
+            Log.i(TAG, "loadState: Updated. SecureDisabled=$secure, RotationHidden=$rotationHidden, FlashlightQsMode=$flashQsMode")
         }
     }
 
@@ -98,6 +103,13 @@ class SystemViewModel(application: Application) : AndroidViewModel(application) 
             } catch (e: Exception) {
                 Log.e(TAG, "toggleRotationButton: Unexpected error", e)
             }
+        }
+    }
+
+    fun setFlashlightQsMode(mode: Int) {
+        viewModelScope.launch(Dispatchers.IO) {
+            AppPreferences.setFlashlightQsMode(getApplication(), mode)
+            _uiState.update { it.copy(flashlightQsMode = mode) }
         }
     }
 
